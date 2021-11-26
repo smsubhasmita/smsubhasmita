@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Types</title>
+</head>
+
+<body>
+    <h1>JAVASCRIPT DATA TYPES</h1>
+
+
+
+    <script>
+        /* 
+        JavaScript Data Types
+        JavaScript variables can hold different data types: numbers, strings, objects and more:
+        
+        String 
+        Number 
+        Boolean 
+        Undefined 
+        Null 
+        Object 
+        Array 
+        Function  
+        
+        */
+
+        /**
+         * The String Data Type
+         * The string data type represents text data strings are created by a single or double quote around one or more characters
+        */
+        var a = 'Hi there!';  // using single quotes
+        var b = "Hi there!";  // using double quotes
+        var c = "Let's have a cup of coffee."; // single quote inside double quotes
+        var d = 'He said "Hello" and left.';  // double quotes inside single quotes
+        var e = 'We\'ll never give up.';     // escaping single quote with backslash */
+
+        console.log(a);
+        console.log(b);
+        console.log(c);
+        console.log(d);
+        console.log(e);
+
+        /**
+         * The Boolean Data Type
+         * There are only two values for the boolean data type: true or false. 
+        /* */
+
+        var isReading = true;   // yes, I'm reading
+        var isSleeping = false; // no, I'm not sleeping
+        var a = 2, b = 5, c = 10;
+
+        console.log(b > a) // Output: true
+        console.log(b > c) // Output: false 
+
+        /**
+         * The Undefined Data Type
+         * The undefined data form can only have one undefined value. If there is a declared variable, but no value has been given, the value is undefined.
+        */
+        // var a;
+        // var b = "Hello World!"
+
+        // console.log(a) // Output: undefined
+        // console.log(b) // Output: Hello World!
+
+        /**
+         * The Null Data Type
+         * This is a different type of information that can only have one null value. 
+        */
+        var a = null;
+        console.log(a); // Output: null
+
+        /**
+         * The Object Data Type
+         * The object is a complex category of information which allows data sets to be processed
+        */
+        /* var emptyObject = {};
+        var person = {"name": "Clark", "surname": "Kent", "age": "36"};
+          For better reading
+        var car = {
+            "model": "BMW X3",
+            "color": "white",
+            "doors": 5
+        }
+        
+        // console.log(emptyObject);
+        // console.log(person);
+        // console.log(person['surname']);
+        // console.log(car['model']);
+        
+        
+        /**
+         * The Array Data Type
+         * An array is an object type that is used in a single variable to store multiple values. 
+         *  The index of the array begins from 0, so that the first array element is arr[0] not arr[1].
+        */
+        // var colors = ["Red", "Yellow", "Green", "Orange",10,true];
+        // var cities = ["London", "Paris", "New York"];
+
+        // console.log(colors[5]);  // Output: Red
+        // console.log(cities[2]);   // Output: New York
+
+        /**
+         * The Function Data Type
+         * The function is an entity that can be called to execute a code block.
+         * **/
+
+        function createGreeting(name) {
+            return "Hello, " + name;
+        }
+        // function add(a,b){
+        //     return a+b;
+        // }
+        function displayGreeting(greetingFunction, userName) {
+            return greetingFunction(userName);
+        }
+// console.log(createGreeting('Little'));
+// var totalAmount =add(15,10);
+// console.log(totalAmount);
+
+// var result = displayGreeting(createGreeting, "Sushanta");
+// console.log(result); // Output: Hello, Peter
+
+    </script>
+</body>
+
+</html>
+ 
