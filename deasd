@@ -1,0 +1,1720 @@
+<link href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/ui-lightness/jquery-ui.css'rel='stylesheet'>
+<link rel="stylesheet" href="<?= base_url('assets/admin');?>/halfyearly.css">
+<style>
+ 
+.float_add{
+  position: unset;
+  padding: 2px;
+  width: 32px;
+  height: 29px;
+  bottom: 3px;
+  right: -185px;
+  text-align: center;
+  box-shadow: 5px 5px 5px rgb(40 133 149);
+	 
+}
+.float_remove{
+	position:unset;
+    padding:2px;
+	width:35px;
+	height:32px;
+	bottom:40px;
+	right:40px;
+ 	text-align:center;
+	box-shadow:5px 5px 5px rgb(122 140 143);
+   /* border-radius: 3.15rem; */
+}
+.crush{
+    text-align: center;
+    padding-top: 10px;
+}
+</style> 
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 mx-auto">
+                <div class="card card-warning ">
+                    <div class="card-header  mb-2">
+                        <h3 class="card-title"><?= $title;?></h3>
+                        <div class="btn-group d-flex justify-content-between float-right" role="group">
+                            <div class="buttonexport" id="buttonlist"> 
+                                <a  href="<?= base_url('helf_report_generate_list');?>">
+                                    <button type="button" class="btn btn-add btn-sm btn-color"  data-placement="top" title="List">
+                                        <i class="fa fa-list fa-lg"></i>
+                                    </button>
+                                </a>  
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <form autocomplete="off" role="form" data-toggle="validator"  id="half_report_form" method="POST" enctype="multipart/form-data" action="<?= base_url('helf_report_generate_add');?>">
+                           <!-- role="form"  data-toggle="validator"  -->
+ <!-- =============== Step 1  =============================--> 
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-3 col-form-label ">Half Yearly Report No. </label>
+                                <div class="col-sm-9">
+                                    <select class="form-control  form-control-sm half_r_no" name="hap_reptno"   data-error="Select Half Yearly Report No" required >
+                                        <option value="">Select Half Yearly Report No. </option>
+                                        <?php for( $number=1; $number<=10; $number++ ){ ?>
+                                        <option value="<?= $number ?>" <?= (set_value('hap_reptno')) ?>><?= $number ?></option> 
+                                        <?php };?>
+                                    </select>     
+                                    <div class="help-block with-errors"></div>
+                                    <?php echo form_error('hap_reptno'); ?>                               
+                                </div>
+                            </div> 
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-3 col-form-label">Date of launching</label>
+                                <div class="col-sm-9">
+                                    <input type="text"   class="form-control form-control-sm  half_lunching_date" id="lunchDate"  name="hap_launchdate" value="<?= set_value('hap_launchdate'); ?>" data-error="Date of launching "   placeholder="dd-mm-yyy" required>
+                                    <div class="help-block with-errors  "></div>
+                                    <?php echo form_error('hap_launchdate'); ?>  
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputPassword" class="col-sm-3 col-form-label">Report For the Period :   from  </label>
+                                <div class="col-sm-4">
+                                    <input type="text" name="hap_reportfrom" class="form-control form-control-sm" id="form_date" placeholder="dd-mm-yyy" data-error=" form date" value="<?= set_value('hap_reportfrom'); ?>" required>
+                                    <div class="help-block with-errors  "></div>
+                                    <?php echo form_error('hap_reportfrom'); ?> 
+                                </div>
+
+                                <label for="inputPassword" class="col-sm-1 col-form-label">To </label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control form-control-sm"  name="hap_reportto" value="<?= set_value('hap_reportto'); ?>" id="to_date"  placeholder="dd-mm-yyy" data-error="To Date"   required >
+                                    <div class="help-block with-errors  "></div>
+                                    <?php echo form_error('hap_reportto'); ?> 
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputPassword" class="col-sm-3 col-form-label">Name of the Agency </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control form-control-sm agency_name"  name="hap_agencyname"  value="<?= set_value('hap_agencyname'); ?>"id="inputPassword" placeholder="Enter Name of the Agency" data-error="Name of the Agency "  required  >
+                                    <div class="help-block with-errors  "></div>
+                                    <?php echo form_error('hap_agencyname'); ?> 
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputPassword" class="col-sm-3 col-form-label">UDISE code  </label>
+                                <div class="col-sm-9">
+                                    <select class="form-control  form-control-sm udise_code" name="hap_schoolid" id="srm_schoolid" onchange="getSchoolDetails(this)"
+                                        data-error="Select UDISE code"   required >
+                                        <option value="">Select UDISE code </option>
+                                        <?php foreach($school_data as $data): ?>
+                                            <option value="<?= $data->scm_id;?>" 
+                                            data-school="<?= $data->scm_name;?>"
+                                            data-block="<?= $data->scm_block;?>"
+                                            data-cordinate="<?= $data->user_name;?>"
+                                            <?= (set_value('hap_schoolid')==$data->scm_id)?'Selected':'';?>>
+                                            <?= $data->scm_udisecode;?> 
+                                            </option>
+                                        <?php endforeach;?>
+                                    </select>
+                                    <div class="help-block with-errors"></div>
+                                    <?php echo form_error('hap_schoolid'); ?>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputPassword" class="col-sm-3 col-form-label ">School Name </label>
+                                <div class="col-sm-9">
+                                    <input type="text"  name="school_name"class="form-control  form-control-sm " id="school_name" placeholder="Enter School Name " data-error="School Name"     >
+                                     
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputPassword" class="col-sm-3 col-form-label">Block </label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="block_mname" class="form-control form-control-sm " id="block" placeholder="Enter Block " data-error="Block"     > 
+                                </div>
+                            </div>
+<!--1. Project coordinator visit details --->
+                           <div class="gradient-title">
+                                <h3 class="main_heading ">1. Project coordinator visit details</h3>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputPassword" class="col-sm-3 col-form-label">Project coordinator Name: Mr.   </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control form-control-sm" id="ProjectCoordinator" placeholder="Enter Project coordinator Name" data-error="Project coordinator Name"   name="hap_projcorname" >
+                                    <div class="help-block with-errors"></div>
+                                    <?php echo form_error('hap_projcorname'); ?> 
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered ">
+                                    <thead>
+                                        <tr>
+                                            <th width="4%">Sl. No.</th>
+                                            <th width="32%">Month</th>
+                                            <th width="32%">Total No. of Visits</th>
+                                            <th width="32%">Remarks</th>
+                                        </tr>
+                                    </thead>
+                                
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td> 
+                                            <td> 
+                                                <div class="form-group">
+                                                    <select class="form-control  form-control-sm month1" name="pvd_month[]" data-error="select Select Month"   required >
+                                                        <option value="">Select Month </option>
+                                                            <?php foreach($month_data as $data): ?>
+                                                            <option value="<?= $data->COM_CMCD;?>" <?= (set_value('pvd_month[]')==$data->COM_CMCD)?'Selected':'';?>>
+                                                            <?= $data->COM_CMNM;?>  
+                                                            </option>
+                                                        <?php endforeach;?>
+                                                    </select> 
+                                                    <div class="help-block with-errors  "></div>
+                                                    <?php echo form_error('pvd_month'); ?> 
+                                                </div>
+                                            </td>  
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="number" class="form-control form-control-sm calculate visit1" placeholder="Enter Number Of Visits" data-error="No of visit"   name="pvd_totnovisit[]" value="<?= set_value('pvd_totnovisit[]')?>" min="0"  required>
+                                                    <div class="help-block with-errors"></div>
+                                                    <?php echo form_error('pvd_totnovisit[]'); ?> 
+                                                </div>
+                                            </td>  
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control form-control-sm remark" placeholder="Enter Remark" data-error="Enter Remark .... "    name="pvd_remarks[]" value="<?= set_value('pvd_remarks[]')?>"  required>
+                                                    <div class="help-block with-errors"></div>
+                                                    <?php echo form_error('pvd_remarks[]'); ?> 
+                                                </div>
+                                            </td>  
+                                        </tr>
+                                        <tr>
+                                            <td>2</td> 
+                                            <td> 
+                                                <div class="form-group">
+                                                    <select class="form-control  form-control-sm month1 " name="pvd_month[]" data-error="select Select Month"   required >
+                                                        <option value="">Select Month </option>
+                                                            <?php foreach($month_data as $data): ?>
+                                                            <option value="<?= $data->COM_CMCD;?>" <?= (set_value('pvd_month[]')==$data->COM_CMCD)?'Selected':'';?>>
+                                                            <?= $data->COM_CMNM;?>  
+                                                            </option>
+                                                        <?php endforeach;?>
+                                                    </select> 
+                                                    <div class="help-block with-errors  "></div>
+                                                    <?php echo form_error('pvd_month[]'); ?> 
+                                                </div>
+                                            </td>  
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="number" class="form-control form-control-sm calculate" placeholder="Enter Number Of Visits" data-error="No of visit"    name="pvd_totnovisit[]" value="<?= set_value('pvd_totnovisit[]')?>"  min="0" required>
+                                                    <div class="help-block with-errors  "></div>
+                                                    <?php echo form_error('pvd_totnovisit[]'); ?> 
+                                                </div>
+                                            </td>  
+                                            <td>
+                                                <div class="form-group ">
+                                                    <input type="text" class="form-control form-control-sm" placeholder="Enter Remark" data-error="Enter Remark .... "    name="pvd_remarks[]" value="<?= set_value('pvd_remarks[]')?>"  required >
+                                                    <div class="help-block with-errors  "></div>
+                                                    <?php echo form_error('pvd_remarks[]'); ?> 
+                                                </div>
+                                            </td>  
+                                        </tr>
+                                        <tr>
+                                            <td>3</td> 
+                                            <td> 
+                                                <div class="form-group">
+                                                    <select class="form-control  form-control-sm month1" name="pvd_month[]" data-error="select Select Month"   required  >
+                                                        <option value="">Select Month </option>
+                                                        <?php foreach($month_data as $data): ?>
+                                                            <option value="<?= $data->COM_CMCD;?>" <?= (set_value('pvd_month[]')==$data->COM_CMCD)?'Selected':'';?>>
+                                                            <?= $data->COM_CMNM;?>  
+                                                            </option>
+                                                        <?php endforeach;?>
+                                                    </select> 
+                                                    <div class="help-block with-errors  "></div>
+                                                    <?php echo form_error('pvd_month[]'); ?> 
+                                                </div>
+                                            </td>  
+                                            <td>
+                                                <div class="form-group  ">
+                                                    <input type="number" class="form-control form-control-sm calculate" placeholder="Enter Number Of Visits" data-error="No of visit"  name="pvd_totnovisit[]" value="<?= set_value('pvd_totnovisit[]')?>"  min="0"  required>
+                                                    <div class="help-block with-errors  "></div>
+                                                    <?php echo form_error('pvd_totnovisit[]'); ?> 
+                                                </div>
+                                            </td>  
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control form-control-sm" placeholder="Enter Remark" data-error="Enter Remark .... "   name="pvd_remarks[]" value="<?= set_value('pvd_remarks[]')?>"   required>
+                                                    <div class="help-block with-errors  "></div>
+                                                    <?php echo form_error('pvd_remarks[]'); ?> 
+                                                </div>
+                                            </td>  
+                                        </tr>
+                                        <tr>
+                                            <td >4</td> 
+                                            <td> 
+                                            <div class="form-group">
+                                                    <select class="form-control  form-control-sm month1 " name="pvd_month[]" data-error="select Select Month"   required >
+                                                        <option value="">Select Month </option>
+                                                            <?php foreach($month_data as $data): ?>
+                                                            <option value="<?= $data->COM_CMCD;?>" <?= (set_value('pvd_month[]')==$data->COM_CMCD)?'Selected':'';?>>
+                                                            <?= $data->COM_CMNM;?>  
+                                                            </option>
+                                                        <?php endforeach;?>
+                                                    </select> 
+                                                    <div class="help-block with-errors  "></div>
+                                                    <?php echo form_error('pvd_month[]'); ?> 
+                                                </div>
+                                            </td>  
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="number" class="form-control form-control-sm calculate  " id="block" placeholder="Enter Number Of Visits" data-error="No of visit"   name="pvd_totnovisit[]" value="<?= set_value('pvd_totnovisit[]')?>"  min="0" required >
+                                                    <div class="help-block with-errors"></div>
+                                                    <?php echo form_error('pvd_totnovisit[]'); ?> 
+                                                </div>
+                                            </td>  
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control form-control-sm" placeholder="Enter Remark" data-error="Enter Remark .... "   name="pvd_remarks[]" value="<?= set_value('pvd_remarks[]')?>" required>
+                                                    <div class="help-block with-errors"></div>
+                                                    <?php echo form_error('pvd_remarks[]'); ?> 
+                                                </div>
+                                            </td>  
+                                        </tr>
+                                        <tr>
+                                            <td>5</td> 
+                                            <td> 
+                                                <div class="form-group">
+                                                    <select class="form-control  form-control-sm month1" name="pvd_month[]" data-error="select Select Month" required   >
+                                                        <option value="">Select Month </option>
+                                                        <?php foreach($month_data as $data): ?>
+                                                            <option value="<?= $data->COM_CMCD;?>" <?= (set_value('pvd_month[]')==$data->COM_CMCD)?'Selected':'';?>>
+                                                            <?= $data->COM_CMNM;?>  
+                                                            </option>
+                                                        <?php endforeach;?>
+                                                    </select> 
+                                                    <div class="help-block with-errors"></div>
+                                                    <?php echo form_error('pvd_month[]'); ?> 
+                                                </div>
+                                            </td>  
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="number" class="form-control form-control-sm calculate" placeholder="Enter Number Of Visits" data-error="No of visit"   name="pvd_totnovisit[]" value="<?= set_value('pvd_totnovisit[]')?>"  min="0" required>
+                                                    <div class="help-block with-errors"></div>
+                                                    <?php echo form_error('pvd_totnovisit[]'); ?> 
+                                                </div>
+                                            </td>  
+                                            <td>
+                                                <div class="form-group ">
+                                                    <input type="text" class="form-control form-control-sm" placeholder="Enter Remark" data-error="Enter Remark .... "  name="pvd_remarks[]" value="<?= set_value('pvd_remarks[]')?>"  required>
+                                                    <div class="help-block with-errors  "></div>
+                                                    <?php echo form_error('pvd_remarks[]'); ?> 
+                                                </div>
+                                            </td>  
+                                        </tr>
+                                        <tr>
+                                            <td>6</td> 
+                                            <td> 
+                                                <div class="form-group">
+                                                    <select class="form-control  form-control-sm month1" name="pvd_month[]" data-error="select Select Month"   required>
+                                                        <option value="">Select Month </option>
+                                                        <?php foreach($month_data as $data): ?>
+                                                            <option value="<?= $data->COM_CMCD;?>" <?= (set_value('pvd_month[]')==$data->COM_CMCD)?'Selected':'';?>>
+                                                            <?= $data->COM_CMNM;?>  
+                                                            </option>
+                                                        <?php endforeach;?>
+                                                    </select> 
+                                                    <div class="help-block with-errors"></div>
+                                                    <?php echo form_error('pvd_month[]'); ?> 
+                                                </div>
+                                                
+                                            </td>  
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="number" class="form-control form-control-sm calculate"  placeholder="Enter Number Of Visits" data-error="No of visit" name="pvd_totnovisit[]" value="<?= set_value('pvd_totnovisit[]')?>"  min="0" required>
+                                                    <div class="help-block with-errors"></div>
+                                                    <?php echo form_error('pvd_totnovisit[]'); ?> 
+                                                </div>
+                                            </td>  
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control form-control-sm" placeholder="Enter Remark" data-error="Enter Remark .... " name="pvd_remarks[]" value="<?= set_value('pvd_remarks[]')?>"  required >
+                                                    <div class="help-block with-errors  "></div>
+                                                    <?php echo form_error('pvd_remarks[]'); ?> 
+                                                </div>
+                                            </td>  
+                                        </tr>
+                                        <tfoot class="text-center">
+                                            <tr>
+                                                <th colspan="2"> Total For 6 Months </th> 
+                                                <th class="text-left"  colspan="2"><span id="sum"></span></th> 
+                                            </tr> 
+                                        </tfoot>
+                                    </tbody>
+                                </table>
+                            </div>
+                           
+<!--- 2. Equipment Downtime Details --->
+                            <div class="gradient-title">
+                                <h3 class="main_heading">2. Equipment Downtime Details</h3>
+                            </div> 
+                            <div class="table-responsive">   
+                                <table class="table table-sm table-bordered text-wrap">  
+                                    <tr>
+                                        <td width="2%">2.1</td>     
+                                        <td width="78%">
+                                            Are all equipment (Server, Terminals (Thin Clients), Smart TV, Laptop, UPS, Generator, Servo Stabilizer) are in working condition? If Not, please mention the details in the table?
+                                        </td>     
+                                        <td width="20%">
+                                            <div class="form-group">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input workCon" type="radio" name="hap_eqpworkcond" onchange="workConditionCheck(this.value)" value="1" required >
+                                                    <label class="form-check-label" for="inlineRadio1">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input workCon" type="radio" name="hap_eqpworkcond" onchange="workConditionCheck(this.value)" value="2">
+                                                    <label class="form-check-label" for="inlineRadio2">No</label>
+                                                </div>
+                                                <div class="help-block with-errors" required></div>
+                                            </div>
+                                        </td>   
+                                    <tr>
+                                    
+                                    <tr>
+                                        <td width="2%">2.2</td>     
+                                        <td  colspan="2" width="98%">Is equipment Downtime School Working Days?</td>     
+                                    </tr>
+                                </table>
+                            </div>
+                            <table class="worKingCondition_yes table table-sm table-bordered" id="myTable" style="display: <?= (set_value    ('inlineRadioOptionsn')=='on')?'':'None';?>" > 
+                                <thead > 
+                                    <th colspan="9"  class="class-center"> Please give details in the below table</th>
+                                    <tr>
+                                        <th scope="col">Equipment</th>
+                                        <th scope="col">Total No. of downtime in  Working days </th>
+                                        <th scope="col">Is the equipment presently working? (Yes/No)</th>
+                                        <th scope="col">Complaint Logged Date</th>
+                                        <th scope="col" >Complaint Closure Date </th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>  
+                                <tbody class="text-left myDowntimeTable">
+                                    <tr>
+                                        <td>  
+                                            <div class="form-group ">
+                                                <select class="form-control  form-control-sm equipment" name="ewc_matid[]">
+                                                    <option value="">Select Equipment</option> 
+                                                    <?php foreach($Equpement_name as $data): ?>
+                                                    <option value="<?= $data->material_id;?>">
+                                                    <?= $data->material_name; ?>
+                                                    </option>
+                                                    <?php endforeach;?>
+                                                </select>
+                                                <div class="text-danger ewc_matid_error"></div>
+                                                <?php echo form_error('ewc_matid[]'); ?> 
+                                            </div> 
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <input type="number" class="form-control form-control-sm working_day" name="ewc_downworkday[]" value="<?= set_value('ewc_downworkday[]'); ?>" min="0" max="30" placeholder="Total No. of downtime in  Working days " onkeyup="addComplainDate(this.value, $(this).data('row'))" data-row="1"  >
+                                                <div class="text-danger ewc_downworkday_error  "></div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <select class="form-control form-control-sm ewc_isworking" name="ewc_isworking[]">
+                                                    <option value="">Select Is working?</option>  
+                                                    <option value="1">Yes</option>
+                                                    <option value="2">No</option>
+                                                </select>
+                                                <div class="text-danger ewc_isworking_error  "></div>
+                                            </div> 
+                                        </td>   
+                                        <td>  
+                                            <div class="complaint_loged_start1"></div> 
+                                        </td> 
+                                        <td>  
+                                            <div class="complaint_closed_close1"></div> 
+                                        </td>  
+                                        <td>
+                                            <div class="col-sm-2">
+                                                <i class="fa fa-plus data text-success fa-lg"onclick="addDowntimeDetailsRow()" data-toggle="tooltip" data-placement="top" title="Add New"></i>
+                                            </div>
+                                        </td>
+                                    </tr>  
+                                </tbody> 
+                            </table>  
+<!---3.Educational content Details --->
+                            <div class="gradient-title">
+                                <h3 class="main_heading">3.Educational content Details</h3>
+                            </div> 
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered text-wrap">  
+                                    <tr>
+                                        <td width="2%">3.1</td>     
+                                        <td width="78%">
+                                            Educational content is installed in all the Server and Laptop. Pls. mention the following details.
+                                        </td>     
+                                        <td width="20%">
+                                            <div class="form-group">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="hap_educontent"  value="1" required >
+                                                    <label class="form-check-label" for="inlineRadio1">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="hap_educontent"  value="2" required >
+                                                    <label class="form-check-label" for="inlineRadio2">No</label>
+                                                </div>
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </td>   
+                                    </tr>
+                                    <tr>
+                                        <td width="2%">3.2</td>     
+                                        <td width="78%">Educational software framework</td>     
+                                        <td width="20%">
+                                            <div class="form-group">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="hap_edusofteare"  value="1" required >
+                                                    <label class="form-check-label" for="inlineRadio1">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="hap_edusofteare" value="2" required >
+                                                    <label class="form-check-label" for="inlineRadio2">No</label>
+                                                </div>
+                                                <div class="help-block with-errors" ></div>
+                                            </div>
+                                        </td>  
+                                    </tr>
+                                </table>
+                            </div>
+ <!--- 4.Recurring service Details --->
+                            <div class="gradient-title">
+                                <h3 class="main_heading">4.Recurring service Details (Please mention the quantity consumed in the last column)</h3>
+                            </div> 
+                            <div class="table-responsive " style="overflow-x: unset;">
+                                <table class="table table-sm table-bordered text-left" >  
+                                    <tr>
+                                        <td width="2%">4.1</td>     
+                                        <td width="50%">Faulty Logging Register(200 pages)</td>     
+                                        <td width="18%">
+                                            <div class="form-group">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="hap_faulogreg" id="inlineRadio51" value="1" required>
+                                                    <label class="form-check-label" for="inlineRadio1">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="hap_faulogreg" id="inlineRadio51" value="2" required>
+                                                    <label class="form-check-label" for="inlineRadio2">No</label>
+                                                </div>
+                                                <div class="help-block with-errors" ></div>
+                                            </div>
+                                        </td>   
+                                        <td width="30%"> 
+                                            <div class="form-group  row">
+                                                <label  class="col-sm-4">Qty consumed </label>
+                                                <div class="col-sm-8">
+                                                    <input type="number" class="form-control form-control-sm qty_4_1" id="inputPassword" placeholder="Enter Qty consumed" data-error="Enter Qty consumed" name="hap_faulogregcnt" value="<?php set_value('hap_faulogregcnt')?>" required>
+                                                        <div class="help-block with-errors  "></div>
+                                                        <?php echo form_error('hap_faulogregcnt'); ?> 
+                                                </div> 
+                                                
+                                            </div>  
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td width="2%">4.2</td>     
+                                        <td width="50%">Stock Register (200 pages)</td>     
+                                        <td width="18%">
+                                            <div class="form-group">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="hap_storeg" id="inlineRadio52" value="1" required>
+                                                    <label class="form-check-label" for="inlineRadio1">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="hap_storeg" id="inlineRadio52" value="2" required>
+                                                    <label class="form-check-label" for="inlineRadio2">No</label>
+                                                </div>
+                                                <div class="help-block with-errors" ></div>
+                                            </div>
+                                        </td>    
+                                        <td width="30%"> 
+                                            <div class="form-group  row">
+                                                <label  class="col-sm-4">Qty consumed </label>
+                                                <div class="col-sm-8">
+                                                    <input type="number" class="form-control form-control-sm qty_4_2" id="inputPassword" placeholder="Enter Qty consumed" data-error="Enter Qty consumed"   name="hap_storegcnt" value="<?php set_value('hap_storegcnt')?>" required>
+                                                    <div class="help-block with-errors  "></div>
+                                                    <?php echo form_error('equipment'); ?> 
+                                                </div> 
+                                            </div>  
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td  width="2%">4.3</td>     
+                                        <td  width="50%">Other Register (200 pages)</td>     
+                                        <td width="18%">
+                                            <div class="form-group">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="hap_othreg" id="inlineRadio53" value="1" required>
+                                                    <label class="form-check-label" for="inlineRadio1">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="hap_othreg" id="inlineRadio53" value="2" required>
+                                                    <label class="form-check-label" for="inlineRadio2">No</label>
+                                                </div>
+                                                <div class="help-block with-errors" ></div>
+                                            </div>
+                                        </td>  
+                                        <td colspan="1"> 
+                                            <div class="form-group  row">
+                                                <label  class="col-sm-4">Qty consumed </label>
+                                                <div class="col-sm-8">
+                                                    <input type="number" class="form-control form-control-sm qty_4_3" id="inputPassword" placeholder="Enter Qty consumed" data-error="Enter Qty consumed" name="hap_othregcnt" value="<?php set_value('hap_othregcnt')?>"  required>
+                                                    <div class="help-block with-errors  "></div>
+                                                        <?php echo form_error('hap_othregcnt'); ?> 
+                                                </div> 
+                                                
+                                            </div>  
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td  width="2%">4.4</td>     
+                                        <td  width="50%" >Blank Sheet of A4 Size ( 75 GSM) (12  Packets Yearly, 500 sheets in each packet)</td>     
+                                        
+                                        <td width="18%">
+                                            <div class="form-group">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="hap_a4sheet" id="inlineRadio54" value="1" required>
+                                                    <label class="form-check-label" for="inlineRadio1">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="hap_a4sheet" id="inlineRadio54" value="2" required>
+                                                    <label class="form-check-label" for="inlineRadio2">No</label>
+                                                </div>
+                                                <div class="help-block with-errors" ></div>
+                                            </div>
+                                        </td>  
+                                        <td colspan="1"> 
+                                            <div class="form-group  row">
+                                                <label  class="col-sm-4">Qty consumed </label>
+                                                <div class="col-sm-8">
+                                                    <input type="number" class="form-control form-control-sm qty_4_4" id="inputPassword" placeholder="Enter Qty consumed" data-error="Enter Qty consumed"   name="hap_ba4sheetcnt" value="<?php set_value('hap_ba4sheetcnt')?>" required>
+                                                    <div class="help-block with-errors  "></div>
+                                                        <?php echo form_error('hap_ba4sheetcnt'); ?> 
+                                                </div> 
+                                                
+                                            </div>  
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td  width="2%">4.5</td>     
+                                        <td   width="50%">Refills & New Cartridge</td>     
+                                        <td width="18%">
+                                            <div class="form-group">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="hap_catridge" id="inlineRadio55" value="1" required >
+                                                    <label class="form-check-label" for="inlineRadio1">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="hap_catridge" id="inlineRadio55" value="2" required>
+                                                    <label class="form-check-label" for="inlineRadio2">No</label>
+                                                </div>
+                                                <div class="help-block with-errors" ></div>
+                                            </div>
+                                        </td>   
+                                        <td colspan="1"> 
+                                            <div class="form-group  row">
+                                                <label  class="col-sm-4">Qty consumed </label>
+                                                <div class="col-sm-8">
+                                                    <input type="number" class="form-control form-control-sm qty_4_5" id="inputPassword" placeholder="Enter Qty consumed" data-error="Enter Qty consumed" name="hap_catridgecnt" value="<?php set_value('hap_catridgecnt')?>"  required>
+                                                    <div class="help-block with-errors  "></div>
+                                                        <?php echo form_error('hap_catridgecnt'); ?> 
+                                                </div> 
+                                                
+                                            </div>  
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td  width="2%">4.6</td>     
+                                        <td  width="50%">USB Drives (Qty -2 , 16 GB)</td>     
+                                        
+                                        <td width="18%">
+                                            <div class="form-group">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="hap_usbdrive" id="inlineRadio56" value="1"  required>
+                                                    <label class="form-check-label" for="inlineRadio1">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="hap_usbdrive" id="inlineRadio56" value="2" required>
+                                                    <label class="form-check-label" for="inlineRadio2">No</label>
+                                                </div>
+                                                <div class="help-block with-errors" ></div>
+                                                <?php echo form_error('hap_usbdrive'); ?> 
+                                            </div>
+                                        </td>   
+                                        <td colspan="1"> 
+                                            <div class="form-group  row">
+                                                <label  class="col-sm-4">Qty consumed </label>
+                                                <div class="col-sm-8">
+                                                    <input type="number" class="form-control form-control-sm qty_4_6" id="inputPassword" placeholder="Enter Qty consumed" data-error="Enter Qty consumed" name="hap_usbdrivecnt" value="<?php set_value('hap_usbdrivecnt')?>"  required>
+                                                    <div class="help-block with-errors  "></div>
+                                                        <?php echo form_error('hap_usbdrivecnt'); ?> 
+                                                </div> 
+                                                
+                                            </div>  
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td  width="2%">4.7</td>     
+                                        <td  width="50%">White Board Marker with Duster (Qty:12)</td>     
+                                        <td width="18%">
+                                            <div class="form-group">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="hap_marker" id="inlineRadio57" value="1" required>
+                                                    <label class="form-check-label" for="inlineRadio1">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="hap_marker" id="inlineRadio57" value="2" required>
+                                                    <label class="form-check-label" for="inlineRadio2">No</label>
+                                                </div>
+                                                <div class="help-block with-errors" ></div>
+                                            </div>
+                                        </td>   
+                                        <td colspan="1"> 
+                                            <div class="form-group  row">
+                                                <label  class="col-sm-4">Qty consumed </label>
+                                                    <div class="col-sm-8">
+                                                        <input type="number" class="form-control form-control-sm qty_4_6" id="inputPassword" placeholder="Enter Qty consumed" data-error="Enter Qty consumed" name="hap_markercnt" value="<?php set_value('hap_markercnt')?>"  required>
+                                                        <div class="help-block with-errors  "></div>
+                                                            <?php echo form_error('hap_markercnt'); ?> 
+                                                    </div> 
+                                                    
+                                            </div>  
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td  width="2%">4.8</td>     
+                                        <td  width="50%">Electricity bill paid by the agency</td>     
+                                        <td width="18%" colspan="2">
+                                            <div class="form-group">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="hap_elctbill" id="inlineRadio58" value="1" required>
+                                                    <label class="form-check-label" for="inlineRadio1">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="hap_elctbill" id="inlineRadio58" value="2" required>
+                                                    <label class="form-check-label" for="inlineRadio2">No</label>
+                                                </div>
+                                                <div class="help-block with-errors" ></div>
+                                            </div>
+                                        </td>    
+                                    </tr> 
+                                    <tr>
+                                        <td  width="2%">4.9</td>     
+                                        <td  width="50%">Internet connectivity available or Not</td>     
+                                        <td width="18%" colspan="2">
+                                            <div class="form-group">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input internetconnectivityy" type="radio" name="hap_intconn" id="inlineRadio49" value="1" required >
+                                                    <label class="form-check-label" for="inlineRadio1">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input internetconnectivityn" type="radio" name="hap_intconn"  id="inlineRadio49" value="2" required>
+                                                    <label class="form-check-label" for="inlineRadio2">No</label>
+                                                </div>
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </td>    
+                                    </tr> 
+                                    <tr>
+                                        <td  width="2%">4.10</td>     
+                                        <td  width="50%" >If Internet connectivity is Not available, give reason there of</td>     
+                                        <td width="18%" colspan="2"> 
+                                            <div class="form-group">
+                                                <input type="text" class="form-control form-control-sm internetconnectivityn_yes" name="hap_intconndtl" min="0"placeholder="Enter Reason  Internet connectivity is Not available" style="display:none" name="hap_intconndtl" value="<?php set_value('hap_intconndtl')?>"  >
+                                                <div class="text-danger hap_intconndtl_error"></div>
+                                            </div>
+                                        </td>    
+                                    </tr> 
+                                </table>
+                            </div>
+                            <div class=" gradient-title">
+                                <h6>Electrical meter reading and generator meter reading</h6>
+                            </div> 
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered" >
+                                    <thead>
+                                        <tr>
+                                            <th>Equipment</th>
+                                            <th>Previous meter reading </th>
+                                            <th>Present meter reading</th>  
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Generator</td>     
+                                            <td>  
+                                                <div class="form-group"> 
+                                                    <input  type="number" class="form-control form-control-sm previous_meter_g" name="hap_genprevmeter" value="<?php set_value('hap_genprevmeter')?>"id="inlineRadio1" placeholder="Enter Previous Generator  Meter Reading" data-error="Enter Previous Generator  Meter Reading" min="0.01" step="0.01" required> 
+                                                    <div class="help-block with-errors  "></div>
+                                                        <?php echo form_error('hap_genprevmeter'); ?>  
+                                                    
+                                                </div>  
+                                            </td>     
+                                            <td> 
+                                                <div class="form-group"> 
+                                                    <input type="number"  class="form-control form-control-sm present_meter_g" name="hap_genpremeterred" value="<?php set_value('hap_genpremeterred')?>"id="inlineRadio1" placeholder="Enter Present Generator  Meter Reading"  data-error="Enter Present Generator  Meter Reading" min="0.01" step="0.01" required> 
+                                                    <div class="help-block with-errors  " ></div>
+                                                    <?php echo form_error('equipment'); ?>  
+                                                </div>     
+                                            </td> 
+                                        </tr> 
+                                        <tr>
+                                            <td>Electrical Meter</td>     
+                                            <td>
+                                                <div class="form-group"> 
+                                                    <input type="number" class="form-control form-control-sm previous_meter_e"   name="hap_electprevmeter" value="<?php set_value('hap_electprevmeter')?>"id="inlineRadio1" placeholder="Enter Previous Electrical Meter Reading" value="" data-error="Enter Previous Electrical Meter Reading" min="0.01" step="0.01" required> 
+                                                    <div class="help-block with-errors  " ></div>
+                                                    <?php echo form_error('hap_electprevmeter'); ?>   
+                                                </div>
+                                                </td>     
+                                            <td>
+                                                <div class="form-group"> 
+                                                    <input type="number" class="form-control form-control-sm present_meter_e"   name="hap_electpremeter" value="<?php set_value('hap_electpremeter')?>"id="inlineRadio1" placeholder="Enter Present Electrical Meter Reading" value="" data-error="Enter Present Electrical Meter Reading" min="0.01" step="0.01" required> 
+                                                    <div class="help-block with-errors  " ></div>
+                                                    <?php echo form_error('hap_electpremeter'); ?>   
+                                                </div> 
+                                            </td>
+                                        </tr>  
+                                    </tbody>
+                                </table>
+                            </div>
+ <!---5. Equipment replacement details --->
+                           <div class="gradient-title"><h3 class="main_heading">5. Equipment replacement details</h3></div> 
+                            <div class="table-responsive" style="overflow-x: unset;">   
+                                <table class="table table-sm table-bordered" >  
+                                    <tbody>
+                                        <tr>
+                                            <td width="2%">5</td>     
+                                            <td width="78%">Replacement of any Equipment by Agency</td>     
+                                            <td width="20%">
+                                                <div class="form-group"> 
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input replacementEquipment" type="radio" name="hap_repeqpagn" id="inlineRadio5" value="1"  required>
+                                                        <label class="form-check-label" for="inlineRadio1">Yes</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input replacementEquipmentNo" type="radio" name="hap_repeqpagn" id="inlineRadio5" value="2" required >
+                                                        <label class="form-check-label" for="inlineRadio2">No</label>
+                                                    </div>
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                            </td>    
+                                        </tr>  
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="table-responsive" style="overflow-x: unset;">
+                                <table  id="equipment_replacement" class="replacementEquipment_Yes table table-sm table-bordered"  style="display: <?= (set_value('inlineRadio5y')=='on')?'':'None';?>">
+                                    <thead>
+                                        <tr>
+                                            <th  class="text-center"> Name of the Equipment</th>   
+                                            <th  class="text-center">Reason for Replacement </th> 
+                                        </tr>
+                                    </thead>  
+                                    <tbody>
+                                        <tr> 
+                                            <td>
+                                                <div class="form-group row"> 
+                                                    <div class="col-sm-12">
+                                                        <select class="form-control  form-control-sm equipment_name" name="red_matid[]" id="equipment"   >
+                                                            <option value="">Select Equipment</option> 
+                                                            <?php foreach($Equpement_name as $data): ?>
+                                                                <option value="<?= $data->material_id;?>"<?= (set_value('red_matid[]')==$data->material_id)?'Selected':'';?>><?= $data->material_name; ?></option>
+                                                                <?php endforeach;?>
+                                                        </select>
+                                                        <div class="text-danger red_matid_error"></div>
+                                                    </div>  
+                                                </div> 
+                                            </td>
+                                            <td>
+                                                <div class="form-group row "> 
+                                                    <div class="col-sm-11 ">
+                                                        <input type="text" name="red_desc[]" class="form-control form-control-sm reason_replacement " id="inputPassword" placeholder="Enter Name of the Equipment"  name="red_desc[]" value="<?php set_value('red_desc[]')?>"  > 
+                                                        <div class="text-danger red_desc_error"></div>
+                                                    </div> 
+                                                    <div class="text-right">
+                                                        <button type="button" class="btn btn-info btn-xs float_add" id="equipment_replacement_add" data-toggle="tooltip" data-placement="top" title="Verified" >
+                                                        <i class="fa fa-plus data text-right" ></i>
+                                                        </button>  
+                                                    </div>
+                                                </div>  
+                                            </td>
+                                        </tr> 
+                                    </tbody>       
+                                </table> 
+                            </div>
+<!--- 6. Theft/Damaged Equipment --->
+                           <div class="gradient-title">
+                                <h3 class="main_heading">6. Theft/Damaged Equipment</h3>
+                            </div> 
+                            <div class="table-responsive" style="overflow-x: unset;">   
+                                <table class="table table-sm table-bordered">  
+                                    <tbody>
+                                        <tr>
+                                            <td width="2%">6</td>     
+                                            <td width="78%">Any equipment theft/damage</td>     
+                                            <td width="20%">
+                                                <div class="form-group">
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input equipmentThefDamage" type="radio" name="hap_eqptheftdmg"  value="1" required>
+                                                        <label class="form-check-label" for="inlineRadio1">Yes</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input equipmentThefDamage_no" type="radio" name="hap_eqptheftdmg"  value="2" required>
+                                                        <label class="form-check-label" for="inlineRadio2">No</label>
+                                                    </div>
+                                                    <div class="help-block with-errors" ></div>
+                                                </div>
+                                            </td>  
+                                        </tr>  
+                                    </tbody>
+                                </table>
+                            </div> 
+                            <div class="table-responsive" style="overflow-x: unset;"    > 
+                                <table class="equipmentThefDamage_list table table-sm table-bordered" id="theftDamage" style="display: <?= (set_value('inlineRadio6y')=='on')?'':'none';?>"> 
+                                    <thead> 
+                                        <tr>
+                                            <th colspan="3" class="text-center">Name The Equipment</th>
+                                        </tr>
+                                        <tr>
+                                            <th scope="col">Equipment</th>
+                                            <th scope="col">Type</th>
+                                            <th scope="col">Quantity</th>
+                                        </tr>
+                                    </thead>  
+                                    <tbody class=" ">
+                                        <tr>
+                                            <td>
+                                                <div class="form-group  row ">
+                                                    <div class="col-sm-12 ">
+                                                        <select class="form-control form-control-sm equipment_name" name="etd_matid[]" >
+                                                            <option value="">Select Equipment</option> 
+                                                            <?php foreach($Equpement_name as $data): ?>
+                                                                <option value="<?= $data->material_id;?>" <?= (set_value('etd_matid[]')==$data->material_id)?'Selected':'';?>><?= $data->material_name; ?></option>
+                                                                <?php endforeach;?>
+                                                        </select> 
+                                                        <div class="text-danger etd_matid_error"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group   row">
+                                                    <div class="col-sm-12">
+                                                        <select class="form-control form-control-sm equipment_type" name="etd_type[]" >
+                                                            <option value="">Select Type</option> 
+                                                            <option value="1"  <?= (set_value('etd_type[]')==1)?'Selected':'';?>>Theft</option>   
+                                                            <option value="2"  <?= (set_value('etd_type[]')==2)?'Selected':'';?>>Damaged</option>
+                                                        </select> 
+                                                        <div class="text-danger etd_type_error"></div>
+                                                    </div>
+                                                </div> 
+                                            </td>
+                                            <td>
+                                                <div class="form-group row "> 
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control form-control-sm Quantity"  placeholder="Enter Name of the Quantity" name="etd_qun[]" value="<?php set_value('etd_qun[]')?>"   > 
+                                                        <div class="text-danger etd_qun_error"></div>
+                                                    </div> 
+                                                    <div class="text-right">
+                                                        <button type="button" class="btn btn-info btn-xs float_add" id="theft_damaged_equpment" data-toggle="tooltip" data-placement="top" title="Verified">
+                                                        <i class="fa fa-plus data text-right" ></i>
+                                                        </button>  
+                                                    </div>
+                                                </div>  
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+ <!--- 7. Lab Utilization details --->
+                            <div class="gradient-title">
+                                <h3 class="main_heading ">7. Lab Utilization details</h3>
+                            </div>
+                            <div class="row">
+                                <label for="staticEmail" class="col-sm-4 col-form-label project ">Total No. of students in 9th  Standard </label> 
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <input type="number" min="0" class="form-control form-control-sm total_student_9th"  placeholder="Enter Students in 9th  Standard" name="hap_totstudent9" value="<?php set_value('hap_totstudent9')?>" required> 
+                                        <div class="help-block with-errors"></div>
+                                        <?php echo form_error('hap_totstudent9'); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label for="staticEmail" class="col-sm-4 col-form-label project"> No. of students attending Smart lab in 9th standard </label>
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <input  type="number" min="0"  class="form-control form-control-sm total_student_lab_9th" id="lunchDate"   placeholder="Enter Students attending Smart lab in 9th standard" name="hap_totstudent9attn" value="<?php set_value('hap_totstudent9attn')?>" required>
+                                        <div class="help-block with-errors"></div>
+                                        <?php echo form_error('hap_totstudent9attn'); ?>
+                                    </div>
+                                </div>
+                            </div>	
+                            <div class="row">
+                                <label for="staticEmail" class="col-sm-4 col-form-label project"> Total No. of students in 10th  Standard </label>
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <input  type="number" min="0"   class="form-control form-control-sm total_student_10th " id="lunchDate"   placeholder="Enter Students in 10th  Standard"name="hap_totstudent10" value="<?php set_value('hap_totstudent10')?>" required >
+                                        <div class="help-block with-errors"></div>
+                                        <?php echo form_error('hap_totstudent10'); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label for="staticEmail" class="col-sm-4 col-form-label project"> No. of students attending Smart lab in 10th  standard  </label>
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <input  type="number"min="0"   class="form-control form-control-sm total_student_lab_10th " id="lunchDate"   placeholder="Enter Students attending Smart lab in 10th  standard" name="hap_totstudent10attn" value="<?php set_value('hap_totstudent10attn')?>"  required>
+                                        <div class="help-block with-errors"></div>
+                                        <?php echo form_error('hap_totstudent10attn'); ?>
+                                    </div>
+                                </div>
+                            </div>   
+                            <div class="table-responsive" style="overflow-x: unset;">   
+                                <table class="table table-sm table-bordered" >  
+                                    <thead> 
+                                        <tr class="h5" >  
+                                            <th colspan="5" style=" border:0px;" class="text-center">No. of hours for which the Smart lab has been utilized(weekly)</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Month</th>
+                                            <th>1st week </th>
+                                            <th>2nd week </th>
+                                            <th>3rd week </th>
+                                            <th>4th week </th>
+                                        </tr>
+                                    </thead> 
+                                    <tbody>
+                                        <tr>
+                                            <td> 
+                                                <div class="form-group">
+                                                    <select class="form-control  form-control-sm" name="sud_month[]" id="month" data-error="select Select Month"   required >
+                                                        <option value="">Select Month </option>
+                                                        <?php foreach($month_data as $data): ?>
+                                                            <option value="<?= $data->COM_CMCD;?>" <?= (set_value('sud_month[]')==$data->COM_CMCD)?'Selected':'';?>>
+                                                            <?= $data->COM_CMNM;?>  
+                                                            </option>
+                                                            <?php endforeach;?>
+                                                    </select> 
+                                                    <div class="help-block with-errors"></div>
+                                                    <?php echo form_error('sud_month[]'); ?> 
+                                                </div>    
+                                            </td>
+                                            <td> 
+                                                <div class="form-group">
+                                                    <input class="form-control form-control-sm " type="tim" placeholder="No of hours Utilized" name="sud_week1[]"   value="<?= set_value('sud_week1[]') ?>" required required>
+                                                    <div class="help-block with-errors "></div>
+                                                </div>
+                                            </td> 
+                                            <td> 
+                                                <div class="form-group">
+                                                    <input class="form-control form-control-sm" type="tim" placeholder="No of hours Utilized" name="sud_week2[]"   value="<?= set_value('sud_week2[]') ?>" required required>
+                                                    <div class="help-block with-errors  "></div>
+                                                </div>
+                                            </td> 
+                                            <td> 
+                                                <div class="form-group">
+                                                    <input class="form-control form-control-sm" type="tim" placeholder="No of hours Utilized" name="sud_week3[]"   value="<?= set_value('sud_week3[]') ?>" required>
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                            </td> 
+                                            <td> 
+                                                <div class="form-group">
+                                                    <input class="form-control form-control-sm" type="tim" placeholder="No of hours Utilized" name="sud_week4[]"   value="<?= set_value('sud_week4[]') ?>" required>
+                                                    <div class="help-block with-errors"></div>
+                                                <div>
+                                            </td> 
+                                        </tr>    
+                                        <tr>
+                                            <td> 
+                                                <div class="form-group">
+                                                    <select class="form-control  form-control-sm" name="sud_month[]" id="month" data-error="select Select Month" required   >
+                                                        <option value="">Select Month </option>
+                                                        <?php foreach($month_data as $data): ?>
+                                                            <option value="<?= $data->COM_CMCD;?>" <?= (set_value('sud_month[]')==$data->COM_CMCD)?'Selected':'';?>>
+                                                            <?= $data->COM_CMNM;?>  
+                                                            </option>
+                                                            <?php endforeach;?>
+                                                    </select> 
+                                                    <div class="help-block with-errors"></div>
+                                                    <?php echo form_error('sud_month[]'); ?> 
+                                                </div>    
+                                            </td>
+                                            <td> 
+                                                <div class="form-group">
+                                                    <input class="form-control form-control-sm " type="tim" placeholder="No of hours Utilized" name="sud_week1[]"   value="<?= set_value('sud_week1[]') ?>" required>
+                                                    <div class="help-block with-errors "></div>
+                                                </div>
+                                            </td> 
+                                            <td> 
+                                                <div class="form-group">
+                                                    <input class="form-control form-control-sm" type="tim" placeholder="No of hours Utilized" name="sud_week2[]"   value="<?= set_value('sud_week2[]') ?>" required>
+                                                    <div class="help-block with-errors  "></div>
+                                                </div>
+                                            </td> 
+                                            <td> 
+                                                <div class="form-group">
+                                                    <input class="form-control form-control-sm" type="tim" placeholder="No of hours Utilized" name="sud_week3[]"   value="<?= set_value('sud_week3[]') ?>" required>
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                            </td> 
+                                            <td> 
+                                                <div class="form-group">
+                                                    <input class="form-control form-control-sm" type="tim" placeholder="No of hours Utilized" name="sud_week4[]"   value="<?= set_value('sud_week4[]') ?>" required>
+                                                    <div class="help-block with-errors"></div>
+                                                <div>
+                                            </td> 
+                                        </tr>   
+                                        <tr>
+                                            <td> 
+                                                <div class="form-group">
+                                                    <select class="form-control  form-control-sm" name="sud_month[]" required id="month" data-error="select Select Month"   required >
+                                                        <option value="">Select Month </option>
+                                                        <?php foreach($month_data as $data): ?>
+                                                            <option value="<?= $data->COM_CMCD;?>" <?= (set_value('sud_month[]')==$data->COM_CMCD)?'Selected':'';?>>
+                                                            <?= $data->COM_CMNM;?>  
+                                                            </option>
+                                                            <?php endforeach;?>
+                                                    </select> 
+                                                    <div class="help-block with-errors"></div>
+                                                    <?php echo form_error('sud_month[]'); ?> 
+                                                </div>    
+                                            </td>
+                                            <td> 
+                                                <div class="form-group">
+                                                    <input class="form-control form-control-sm " type="tim" placeholder="No of hours Utilized" 
+                                                    name="sud_week1[]"   value="<?= set_value('sud_week1[]') ?>" required>
+                                                    <div class="help-block with-errors "></div>
+                                                </div>
+                                            </td> 
+                                            <td> 
+                                                <div class="form-group">
+                                                    <input class="form-control form-control-sm" type="tim" placeholder="No of hours Utilized" 
+                                                    name="sud_week2[]"   value="<?= set_value('sud_week2[]') ?>" required>
+                                                    <div class="help-block with-errors  "></div>
+                                                </div>
+                                            </td> 
+                                            <td> 
+                                                <div class="form-group">
+                                                    <input class="form-control form-control-sm" type="tim" placeholder="No of hours Utilized" 
+                                                    name="sud_week3[]"   value="<?= set_value('sud_week3[]') ?>" required>
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                            </td> 
+                                            <td> 
+                                                <div class="form-group">
+                                                    <input class="form-control form-control-sm" type="tim" placeholder="No of hours Utilized" 
+                                                    name="sud_week4[]"   value="<?= set_value('sud_week4[]') ?>" required>
+                                                    <div class="help-block with-errors"></div>
+                                                <div>
+                                            </td> 
+                                        </tr>   
+                                        <tr>
+                                            <td> 
+                                                <div class="form-group">
+                                                    <select class="form-control  form-control-sm" name="sud_month[]" id="month" data-error="select Select Month"  required  >
+                                                        <option value="">Select Month </option>
+                                                        <?php foreach($month_data as $data): ?>
+                                                            <option value="<?= $data->COM_CMCD;?>" <?= (set_value('sud_month[]')==$data->COM_CMCD)?'Selected':'';?>>
+                                                            <?= $data->COM_CMNM;?>  
+                                                            </option>
+                                                            <?php endforeach;?>
+                                                    </select> 
+                                                    <div class="help-block with-errors"></div>
+                                                    <?php echo form_error('sud_month[]'); ?> 
+                                                </div>    
+                                            </td>
+                                            <td> 
+                                                <div class="form-group">
+                                                    <input class="form-control form-control-sm " type="tim" placeholder="No of hours Utilized" 
+                                                    name="sud_week1[]"   value="<?= set_value('sud_week1[]') ?>" required>
+                                                    <div class="help-block with-errors "></div>
+                                                </div>
+                                            </td> 
+                                            <td> 
+                                                <div class="form-group">
+                                                    <input class="form-control form-control-sm" type="tim" placeholder="No of hours Utilized" 
+                                                    name="sud_week2[]"   value="<?= set_value('sud_week2[]') ?>" required>
+                                                    <div class="help-block with-errors  "></div>
+                                                </div>
+                                            </td> 
+                                            <td> 
+                                                <div class="form-group">
+                                                    <input class="form-control form-control-sm" type="tim" placeholder="No of hours Utilized" 
+                                                    name="sud_week3[]"   value="<?= set_value('sud_week3[]') ?>" required>
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                            </td> 
+                                            <td> 
+                                                <div class="form-group">
+                                                    <input class="form-control form-control-sm" type="tim" placeholder="No of hours Utilized" 
+                                                    name="sud_week4[]"   value="<?= set_value('sud_week4[]') ?>" required>
+                                                    <div class="help-block with-errors"></div>
+                                                <div>
+                                            </td> 
+                                        </tr>   
+                                        <tr>
+                                            <td> 
+                                                <div class="form-group">
+                                                    <select class="form-control  form-control-sm" name="sud_month[]" id="month" data-error="select Select Month"  required  >
+                                                        <option value="">Select Month </option>
+                                                        <?php foreach($month_data as $data): ?>
+                                                            <option value="<?= $data->COM_CMCD;?>" <?= (set_value('sud_month[]')==$data->COM_CMCD)?'Selected':'';?>>
+                                                            <?= $data->COM_CMNM;?>  
+                                                            </option>
+                                                            <?php endforeach;?>
+                                                    </select> 
+                                                    <div class="help-block with-errors"></div>
+                                                    <?php echo form_error('sud_month[]'); ?> 
+                                                </div>    
+                                            </td>
+                                            <td> 
+                                                <div class="form-group">
+                                                    <input class="form-control form-control-sm " type="tim" placeholder="No of hours Utilized" 
+                                                    name="sud_week1[]"   value="<?= set_value('sud_week1[]') ?>" required>
+                                                    <div class="help-block with-errors "></div>
+                                                </div>
+                                            </td> 
+                                            <td> 
+                                                <div class="form-group">
+                                                    <input class="form-control form-control-sm" type="tim" placeholder="No of hours Utilized" 
+                                                    name="sud_week2[]"   value="<?= set_value('sud_week2[]') ?>" required>
+                                                    <div class="help-block with-errors  "></div>
+                                                </div>
+                                            </td> 
+                                            <td> 
+                                                <div class="form-group">
+                                                    <input class="form-control form-control-sm" type="tim" placeholder="No of hours Utilized" 
+                                                    name="sud_week3[]"   value="<?= set_value('sud_week3[]') ?>" required>
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                            </td> 
+                                            <td> 
+                                                <div class="form-group">
+                                                    <input class="form-control form-control-sm" type="tim" placeholder="No of hours Utilized" 
+                                                    name="sud_week4[]"   value="<?= set_value('sud_week4[]') ?>" required>
+                                                    <div class="help-block with-errors"></div>
+                                                <div>
+                                            </td> 
+                                        </tr>   
+                                    <tbody>
+                                </table><br>
+                            </div>  
+
+                                                                                       
+
+
+                         <div class="float-right">
+                            <button type="reset" class="btn btn-danger active " onclick="window.history.back()">Close</button>
+                            <button type="submit"  class="btn btn-primary  ">Save</button>
+                        </div>
+                    </div>
+                    
+                </div>
+                   
+                </form> 
+            </div>
+        </div>
+    </div>
+</section>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script>
+$('#half_report_form').submit(function(e){
+    //e.preventDefault();
+  
+    /************************************************* 2 Equipment Downtime Details 2******************************************************** */
+    /*
+    if($('.workCon:checked').val() == 2){
+        let equipment   =$('.equipment option:selected').val();
+        if(equipment ==''){
+            $('.equipment').css('border-color','red');
+            $('.equipment').focus(); 
+            $('.ewc_matid_error').html('Select Equipment Name');
+            return false;  
+        }
+        $('.equipment').css('border-color',''); 
+        $('.ewc_matid_error').html('');
+
+        let working_day = $('.working_day').val();
+        if(working_day ==''){
+            $('.working_day').css('border-color','red');
+            $('.working_day').focus(); 
+            $('.ewc_downworkday_error ').html('Total No. of downtime in Working days');
+            return false;  
+        }
+        $('.working_day').css('border-color','');
+        $('.ewc_downworkday_error ').html('');
+
+
+        let isWorking = $(".ewc_isworking option:selected").val(); 
+        if(isWorking == ''){      
+            $('.ewc_isworking_error ').html('Select equipment presently working or not');       
+            return false; 
+        } 
+        $('.ewc_isworking_error').html('');
+
+
+    }
+*/
+    /** 4.9	Internet connectivity available or Not */
+    /*
+    if($("input[name=hap_intconn]:checked").val() == 2){ 
+        var hap_intconndtl=$('.internetconnectivityn_yes').val();
+            if(hap_intconndtl == '' &&  hap_intconndtl.length == 0) {
+            $('.internetconnectivityn_yes').css('border-color','red');
+            $('.internetconnectivityn_yes').focus();
+            $('.hap_intconndtl_error').html('Enter Reason Internet connectivity is Not available');
+            return false;  
+        } 
+        $('.internetconnectivityn_yes').css('border-color','');
+        $('.hap_intconndtl_error').html('');
+
+    }
+
+*/
+    /*************************************************Equipment Replacement Details******************************************************** */ 
+    /*
+    if($("input[name=hap_repeqpagn]:checked").val() == 1){
+        var equipment_name=$('.equipment_name').val();
+            if(equipment_name == '' &&  equipment_name.length == 0) {
+            $('.equipment_name').css('border-color','red');
+            $('.equipment_name').focus();
+            $('.red_matid_error').html('Name of the Equipment');
+            return false;  
+        } 
+        $('.equipment_name').css('border-color','');
+        $('.red_matid_error').html('');
+
+        var reason_replacement=$('.reason_replacement').val();
+            if(reason_replacement == '' &&  reason_replacement.length == 0) {
+            $('.reason_replacement').css('border-color','red');
+            $('.reason_replacement').focus();
+            $('.red_desc_error').html('Equipment Replacement Details');
+            return false;  
+        } 
+        $('.reason_replacement').css('border-color','');
+        $('.red_desc_error').html('');
+    }
+    */
+    /*************************************************Theft/Damaged Equipment******************************************************** */
+    /*
+    if($("input[name=hap_eqptheftdmg]:checked").val() == 1){ 
+        var equipment_name_th=$('.equipment_name option:selected').val();
+            if(equipment_name_th == '' &&  equipment_name_th.length == 0) {
+            $('.equipment_name').css('border-color','red');
+            $('.equipment_name').focus();
+            $('.etd_matid_error').html('Name of the Equipment');
+            return false;  
+        } 
+        $('.equipment_name').css('border-color','');
+        $('.etd_matid_error').html('');
+
+        var equipment_type=$('.equipment_type  option:selected').val();
+            if(equipment_type == '' &&  equipment_type.length == 0) {
+            $('.equipment_type').css('border-color','red');
+            $('.equipment_type').focus();
+            $('.etd_type_error').html('Equipment Type');
+            return false;  
+        } 
+        $('.equipment_type').css('border-color','');
+        $('.etd_type_error').html('');
+
+        var equipment_quantity=$('.Quantity  option:selected').val();
+            if(equipment_quantity == '' &&  equipment_quantity.length == 0) {
+            $('.Quantity').css('border-color','red');
+            $('.Quantity').focus();
+            $('.etd_qun_error').html('Equipment  Quantity');
+            return false;  
+        } 
+        $('.Quantity').css('border-color','');
+        $('.etd_qun_error').html('');
+    }
+*/
+});
+
+ 
+//SCHOOL DETAILS
+const getSchoolDetails=(element)=>{
+    var opt =element.options[element.selectedIndex];
+    $('#school_name').val(opt.dataset.school);
+    $('#block').val(opt.dataset.block);
+    $('#ProjectCoordinator').val(opt.dataset.cordinate);
+
+    addAttribute(['#school_name','#block','#ProjectCoordinator']);
+}
+function addAttribute(elementArray){
+    for(var i=0; i < elementArray.length; i++){
+        $(elementArray[i]).attr('readonly',true);
+    }
+}
+
+//*************Total No Of Visit******************/ 
+
+$(".calculate").each(function() {
+    $(this).keyup(function(){
+        calculateSum();
+    });
+});
+
+function calculateSum() {
+    var sum = 0;
+     $(".calculate").each(function() { 
+         if(!isNaN(this.value) && this.value.length!=0) {
+            sum += parseInt(this.value);
+        }
+        //.toFixed(2)
+    });
+     $("#sum").html(sum);
+}
+
+//equipment Downtime Detail 2.2
+//TABLE SHOW HIDE
+const workConditionCheck =(val)=>{
+    if(parseInt(val) === 2){
+        $('.worKingCondition_yes').show();
+    }else{
+        $('.worKingCondition_yes').hide(); 
+    }
+}
+//Is equipment Downtime School Working Days
+var mynum = 1;
+const addDowntimeDetailsRow=()=>{
+    mynum ++;
+    addDowntimeHtml(mynum);
+}
+
+function addDowntimeHtml(count){ //console.log(count);
+    var html=`<tr> 
+            <td> 
+                <div class="form-group"> 
+                    <select class="form-control  form-control-sm equipment " name="ewc_matid[]"  required>
+                        <option value="">Select Equipment</option> 
+                        <?php foreach($Equpement_name as $data): ?>
+                        <option value="<?= $data->material_id;?>">
+                        <?= $data->material_name; ?>
+                        </option>
+                        <?php endforeach;?>
+                    </select>
+                    <div class="help-block with-errors  "></div>
+                    <?php echo form_error('ewc_matid[]'); ?>  
+                </div>
+            </td>
+            <td> 
+                <div class="form-group">
+                    <input type="number" class="form-control form-control-sm working_day" name="ewc_downworkday[]" placeholder="Total No. of downtime in  Working days " min="0" max="31" value="<?= set_value('ewc_downworkday[]');  ?>" onkeyup="addComplainDate(this.value, $(this).data('row'))"  data-row="${count}" required >
+                    <div class="help-block with-errors  "></div>
+                </div>
+            </td> 
+            <td>
+                <div class="form-group">
+                    <select class="form-control form-control-sm ewc_isworking" name="ewc_isworking[]">
+                        <option value="">Select Is working?</option>  
+                        <option value="1">Yes</option>
+                        <option value="2">No</option>
+                    </select>
+                    <div class="text-danger ewc_isworking_error  "></div>
+                </div> 
+            </td>   
+            <td>  
+                <div class="complaint_loged_start${count}"></div> 
+            </td> 
+            <td>  
+                <div class="complaint_closed_close${count}"></div> 
+            </td>
+            <td>
+                <div class="col-sm-2">
+                    <i class="fa fa-times data text-danger fa-lg" onClick="$(this).closest('tr').remove()" data-toggle="tooltip" data-placement="top" title="Remove Row" ></i>
+                </div>
+            </td>
+        </tr>`;
+    $('.myDowntimeTable').append(html); 
+}
+
+const addComplainDate =(value, row)=>{
+    var LoggedDate=`<div class="form-group my-1">
+                            <input class="form-control form-control-sm complaint_loged" type="date"  id="logged"  min="0" 
+                            name="ewd_logdate${row}[]" value="<?= set_value('ewd_logdate[]');?>" required>
+                            <div class="help-block with-errors  "></div>
+                        </div>`;
+    var ClosureDate=`<div class="form-group my-1">
+                        <input class="form-control form-control-sm complaint_closed" type="date"  id="Closure" name="ewd_closedate${row}[]" value="<?= set_value('ewd_closedate[]');?>" required>
+                        <div class="help-block with-errors  "></div>
+                    </div>`; 
+    var Logged = LoggedDate.repeat(value);
+    $(`.complaint_loged_start${row}`).html(Logged); 
+        
+    var closerDate=ClosureDate.repeat(value);
+    $(`.complaint_closed_close${row}`).html(closerDate); 
+}
+
+
+
+///TABLE SHOW HIDE
+$(document).ready(function(){
+   
+   //Internet Connectivity Available 4.8 
+   $('.internetconnectivityn').on('change', function(){
+        var internetconnectivityn = this.checked ? this.value : '';
+       
+        if(internetconnectivityn=1){
+            $('.internetconnectivityn_yes').show();
+        }else{
+            $('.internetconnectivityn_yes').hide(); 
+        }
+    });
+    $('.internetconnectivityy').on('change', function(){
+        var internetconnectivityy = this.checked ? this.value : '';
+       
+        if(internetconnectivityy=1){
+            $('.internetconnectivityn_yes').hide();
+        }else{
+            $('.internetconnectivityn_yes').show(); 
+        }
+    });
+    //equipment Replacement 5
+    $('.replacementEquipment').on('change', function(){
+        var replacementEquipment = this.checked ? this.value : '';
+         if(replacementEquipment){
+            $('.replacementEquipment_Yes').show();
+        }else{
+            $('.replacementEquipment_Yes').hide(); 
+        }
+    });
+    $('.replacementEquipmentNo').on('change', function(){
+        var replacementEquipmentNo = this.checked ? this.value : '';
+         if(replacementEquipmentNo){
+            $('.replacementEquipment_Yes').hide();
+         }
+    });
+    //Any equipment theft/damage
+    $('.equipmentThefDamage').on('change',function(){
+        var equipmentThefDamage = this.checked ? this.value : '';
+        console.log(equipmentThefDamage);
+        if(equipmentThefDamage){
+            $('.equipmentThefDamage_list').show();
+        }else{
+            $('.equipmentThefDamage_list').hide(); 
+        }
+    });
+    $('.equipmentThefDamage_no').on('change',function(){
+        var equipmentThefDamage_no = this.checked ? this.value : '';
+        console.log(equipmentThefDamage_no);
+        if(equipmentThefDamage_no){
+            $('.equipmentThefDamage_list').hide();
+        
+        }
+    });
+});
+ 
+$(document).ready(function(){
+    //Equipment replacement details
+    $("#equipment_replacement_add").click(function(){
+         var htmlData2=`<tr> 
+                            <td>
+                                <div class="form-group row"> 
+                                    <div class="col-sm-12">
+                                        <select class="form-control  form-control-sm equipment_name" name="red_matid[]" id="equipment" required >
+                                            <option value="">Select Equipment</option> 
+                                            <?php foreach($Equpement_name as $data): ?>
+                                                <option value="<?= $data->material_id;?>"<?= (set_value('red_matid[]')==$data->material_id)?'Selected':'';?>><?= $data->material_name; ?></option>
+                                                <?php endforeach;?>
+                                        </select>
+                                    </div>  
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group row "> 
+                                    <div class="col-sm-11 ">
+                                        <input type="text" name="red_desc[]" class="form-control form-control-sm reason_replacement " id="inputPassword" placeholder="Enter Name of the Equipment"  name="red_desc[]" value="<?php set_value('red_desc[]')?>" required> 
+                                    </div>  
+                                     <button class=" btn  btn-light  btn-xs   float_remove" onClick="$(this).closest('tr').remove()"> <i class="fa  fa-times  data fa-lg p-2 text-danger"></i></button>
+                                 
+                                </div>
+                            </td>
+                             
+                        </tr> `;
+         $('#equipment_replacement > tbody:last').append(htmlData2); 
+    }); 
+     
+    
+    // Theft/Damaged Equipment
+    $("#theft_damaged_equpment").click(function(){
+        var htmlTheftDamage=`<tr>
+                                <td>
+                                    <div class="form-group  row ">
+                                        <div class="col-sm-12 ">
+                                            <select class="form-control  form-control-sm equipment_name" name="etd_matid[]" >
+                                                <option value="">Select Equipment</option> 
+                                                <?php foreach($Equpement_name as $data): ?>
+                                                    <option value="<?= $data->material_id;?>"<?= (set_value('etd_matid[]')==$data->material_id)?'Selected':'';?>><?= $data->material_name; ?></option>
+                                                    <?php endforeach;?>
+                                            </select> 
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group   row">
+                                        <div class="col-sm-12">
+                                            <select class="form-control  form-control-sm equipment_type" name="etd_type[]" >
+                                                <option value="" >Select Type</option> 
+                                                <option value="1"  <?= (set_value('etd_type[]')==1)?'Selected':'';?>>Theft</option>   
+                                                <option value="2"  <?= (set_value('etd_type[]')==2)?'Selected':'';?>>Damaged</option>
+                                            </select> 
+                                        </div>
+                                    </div> 
+                                </td>
+                                <td>
+                                    <div class="form-group row "> 
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control form-control-sm Quantity" value="<?php set_value('etd_qun[]')?>" placeholder="Enter Name of the Equipment" name="etd_qun[]"> 
+                                        </div> 
+                                        <button class=" btn   btn-light btn-xs   float_remove" onClick="$(this).closest('tr').remove()"> <i class="fa  fa-times  data fa-lg p-2 text-danger"></i></button>
+
+                                    </div>  
+                                </td>
+                            </tr> `; 
+         $('#theftDamage > tbody:last').append(htmlTheftDamage);                                                                       
+    });
+
+ }); 
+ 
+//Date Picker
+    $(function() {
+    
+    //Report For the Period
+        $("#lunchDate").datepicker({
+            dateFormat:'dd-M-yy',
+            duration: 'Normal',
+            changeMonth: true,
+            changeYear: true,
+            showWeek: false
+        });
+        
+        $("#form_date").datepicker({
+            dateFormat:'dd-M-yy',
+            duration: 'Normal',
+            changeMonth: true,
+            changeYear: true,
+            showWeek: false
+        });
+        
+        $("#to_date").datepicker({
+            dateFormat:'dd-M-yy',
+            duration: 'Normal',
+            changeMonth: true,
+            changeYear: true,
+            showWeek: false
+        });
+        $('#form_date').change(function() {
+            startDate = $(this).datepicker('getDate');
+            $("#to_date").datepicker("option", "minDate", startDate);
+        });
+
+        $('#to_date').change(function() {
+            endDate = $(this).datepicker('getDate');
+            $("#form_date").datepicker("option", "maxDate", endDate);
+        });
+        $("#logged").datepicker({
+            dateFormat:'dd-M-yy',
+            duration: 'Normal',
+            changeMonth: true,
+            changeYear: true,
+            showWeek: false
+        });
+         $("#Closure").datepicker({
+            dateFormat:'dd-M-yy',
+            duration: 'Normal',
+            changeMonth: true,
+            changeYear: true,
+            showWeek: false
+        });
+        $('#logged').change(function() {
+            startDate = $(this).datepicker('getDate');
+            $("#Closure").datepicker("option", "minDate", startDate);
+        });
+
+        $('#Closure').change(function() {
+            endDate = $(this).datepicker('getDate');
+            $("#logged").datepicker("option", "maxDate", endDate);
+        
+        });
+        // $("#signDate").datepicker({
+        //     dateFormat:'dd-M-yy',
+        //     duration: 'Normal',
+        //     changeMonth: true,
+        //     changeYear: true,
+        //     showWeek: false
+        // });
+        // $('#my_date_picker1').change(function() {
+        // //  startDate = $(this).datepicker('getDate');
+        //     $("#signDate").datepicker("option", "minDate", startDate);
+        // });
+
+        // $('#signDate').change(function() {
+        //     endDate = $(this).datepicker('getDate');
+        //     $("#my_date_picker1").datepicker("option", "maxDate", endDate);
+        
+        // });
+
+    
+    });
+
+    $('#txtDate').datepicker({
+        changeMonth: true,
+        changeYear: false,
+        dateFormat: 'MM',
+
+        onClose: function() {
+            var iMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+            var iYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+            $(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+        },
+
+        beforeShow: function() {
+        if ((selDate = $(this).val()).length > 0) 
+        {
+            iYear = selDate.substring(selDate.length - 4, selDate.length);
+            iMonth = jQuery.inArray(selDate.substring(0, selDate.length - 5), 
+                    $(this).datepicker('option', 'monthNames'));
+            $(this).datepicker('option', 'defaultDate', new Date(iYear, iMonth, 1));
+            $(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+        }
+        }
+    });
+<script>
+
+
+
+
+
+
+
+
+
+
+
+// function myFunction() {
+//     var x = document.getElementById("myDIV");
+//     if (x.style.display === "none") {
+//         x.style.display = "block";
+//     } else {
+//         x.style.display = "none";
+//     }
+// }
+// $(document).on("click", function(e){
+//     if($(e.target).is(".Coordinator")){
+//       $("#myDIV").show();
+//       //$('#myDIV').removeAttr('display':'none') 
+//      // $("#myDIV").css('display':'');
+//     }else{
+//         $("#half_report_form").hide();
+//     }
+// });
+</script>
+
