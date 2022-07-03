@@ -1,0 +1,61 @@
+view page
+=============================
+<div class="col-sm-6"> 
+    <div class="mb-3">
+        <label for="exampleFormControlInput1"  class="form-label">country</label>  
+        <?php foreach($country as $data){?>
+        <select class="form-select form-select-sm" name="bas_country" aria-label=".form-select-sm example" onchange="getState(this.value)">
+            <option value="">Select country</option>
+            <option value="<?= $data->COM_COCD ?>" <?= ((set_value('bas_country')==$data->COM_COCD)?'selected':'')?>><?= $data->COM_CONM ?></option>
+         </select>
+       <?php }?>                         
+
+        <?= form_error('bas_country');?>
+    </div>
+</div>
+<div class="col-sm-6"> 
+    <div class="mb-3">
+        <label for="exampleFormControlInput1"  class="form-label">State</label>  
+        <select class="form-select form-select-sm statedata_bycontryId" name="bas_cat" aria-label=".form-select-sm example" onchange="getDistrict(this.value);">
+            <option value="">Select State</option>
+        </select> 
+        <?= form_error('bas_cat');?>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+function getState(countryId){
+    if(countryId != ""){
+        //Ajax Calling
+        $.ajax({
+            url:'<?= base_url('MasterControllers/ajax_get_state');?>',
+            type:'POST',
+            cache:false,
+            data:{
+                bas_country:countryId
+            },
+            success:function(response){
+                $('.statedata_bycontryId').html(response);
+                //console.log(response);
+            }
+        });
+    }
+}  
+</script>
+controller file
+=========================================
+ function ajax_get_state(){
+        $bas_country =$_POST['bas_country'];
+        $state=get_table_data('sta_mst','STM_STCD,STM_STNM',"STM_CANC=1 AND STM_COCD=$bas_country")->result();
+        if($state){
+            $html='<option value="">Select State</option>';
+            foreach($state as $data){
+                $html.='<option value="'.$data->STM_STCD.'">'.$data->STM_STNM.'</option>';
+            }
+            echo $html;
+
+        }else{
+            echo "No State Found?.";
+        }
+      
+    }
