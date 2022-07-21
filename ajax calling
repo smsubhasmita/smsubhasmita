@@ -1,0 +1,53 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+    function getState(stateId){
+         if(stateId !=""){
+           $.ajax({
+               url:'<?= base_url('Welcome/get_state_data_ajax');?>',
+               type:"POST",
+               cache:false, 
+               data:{
+                user_country:stateId
+               },
+                success: function(Responce){
+                     $('.stateData').html(Responce);
+                }
+               
+           }) 
+        }
+    }
+    <script>
+    
+    function get_state_data_ajax(){
+        $countryId=$_POST['user_country'];
+        $sate_data=$this->wlcm->get_state($countryId)->result();
+        if($sate_data){
+           $html='<option value="">Select State </option>';
+           foreach($sate_data as $data){
+             $html.='<option value="'.$data->STM_STCD.'">'.$data->STM_STNM.'</option>';
+           }
+           echo $html;
+        }else{
+          echo "data not found";
+        }
+	}
+  $uplodePath="uplode/teacher_data/";
+             
+      $old_tech_pic=$this->input->post('old_tech_pic');
+      $file_name=$_FILES['tech_pic']['name'];
+      $file_temp=$_FILES['tech_pic']['tmp_name'];
+
+      if($_FILES['tech_pic']['name'] !=="" && $_FILES['tech_pic']['error'] === 0 && empty($old_tech_pic) ){
+          move_uploaded_file($_FILES['tech_pic']['tmp_name'],$uploadPath.$tech_pic_name);
+          $update_data['tech_pic']=$tech_pic_name; 
+      }elseif($_FILES['tech_pic']['name'] !=="" && !empty($old_tech_pic) ){
+          if(file_exists($uploadPath.$old_tech_pic)){
+              unlink($uploadPath.$old_tech_pic);
+          }
+           move_uploaded_file($_FILES['tech_pic']['tmp_name'],$uploadPath.$tech_pic_name);
+          $update_data['tech_pic']=$tech_pic_name;
+
+      }else{
+         $update_data['tech_pic']=$old_tech_pic;
+  }
+  
