@@ -1,0 +1,17 @@
+ if($response){
+                $this->session->set_flashdata('message','<div class="text-peimery">add successfully</div>');
+                redirect('teacher_informationlist','refress');
+               // $this->load->view('teacher_info');
+            }else{
+                $this->session->set_flashdata('error','<div class="text-danger">data add unsucessfully</div>');
+                redirect('teacher_information_edit/'.$tech_id,'refress');
+                
+            }
+            
+            $message=$this->session->flashdata('message');
+                $error=$this->session->flashdata('error');
+                if($message){
+                    echo $message;
+                }else{
+                    echo  $error;
+                }
