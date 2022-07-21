@@ -114,3 +114,33 @@ class Welcome extends CI_Controller {
 		}
 	}
 }
+
+duplicate
+===========
+
+$sql="SELECT COUNT(*) as total FROM employ_mst WHERE emp_id != $emp_id AND emp_email='$email'";
+        $query =$this->db->query($sql);
+        $total =$query->row()->total;
+        return $total;
+file
+====
+if($_FILES['stu_pic']['name'] !=="" && $_FILES['stu_pic']['error'] === 0 && empty($old_stu_pic) ){
+                move_uploaded_file($_FILES['stu_pic']['tmp_name'],$uploadPath.$stu_pic_name);
+                $update_data['stu_pic']=$stu_pic_name; 
+            }elseif($_FILES['stu_pic']['name'] !=="" && !empty($old_stu_pic) ){
+                if(file_exists($uploadPath.$old_stu_pic)){
+                    unlink($uploadPath.$old_stu_pic);
+                }
+                 move_uploaded_file($_FILES['stu_pic']['tmp_name'],$uploadPath.$stu_pic_name);
+                $update_data['stu_pic']=$stu_pic_name;
+            
+            }else{
+               $update_data['stu_pic']=$old_stu_pic;
+            }
+
+
+
+
+
+
+
