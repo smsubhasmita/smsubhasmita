@@ -1,0 +1,612 @@
+/* generate Invoice After Payment Success */
+function generate_invoice($hap_prgid){
+    $CI =&  get_instance();
+    $CI->load->database();
+   //step -1 
+    $sql="SELECT *,
+    CASE WHEN hap_eqpworkcond=1 THEN 'Yes' ELSE 'No' END  wqp_data,
+    CASE WHEN hap_educontent=1 THEN 'Yes' ELSE 'No' END  edu_data,
+    CASE WHEN hap_edusofteare=1 THEN 'Yes' ELSE 'No' END  edu_swdata,
+    CASE WHEN hap_faulogreg=1 THEN 'Yes' ELSE 'No' END  rec_fault,
+    CASE WHEN hap_storeg=1 THEN 'Yes' ELSE 'No' END  rec_stro,
+    CASE WHEN hap_othreg=1 THEN 'Yes' ELSE 'No' END  rec_other,
+    CASE WHEN hap_catridge=1 THEN 'Yes' ELSE 'No' END  rec_catrg,
+    CASE WHEN hap_a4sheet=1 THEN 'Yes' ELSE 'No' END  rec_a4shet,
+    CASE WHEN hap_usbdrive=1 THEN 'Yes' ELSE 'No' END  rec_usbdr,
+    CASE WHEN hap_marker=1 THEN 'Yes' ELSE 'No' END  rec_marker,
+    CASE WHEN hap_elctbill=1 THEN 'Yes' ELSE 'No' END  rec_elcbill,
+    CASE WHEN hap_intconn=1 THEN 'Yes' ELSE 'No' END  rec_intco,
+    CASE WHEN hap_repeqpagn=1 THEN 'Yes' ELSE 'No' END  rec_repeqpagn,
+    CASE WHEN hap_eqptheftdmg=1 THEN 'Yes' ELSE 'No' END  eqptheftdmg,
+    scm_name,scm_udisecode,scm_block,
+    (SELECT DSM_DSNM FROM dst_mst01 WHERE DSM_DSCD=	scm_distid) as dist_name    
+    FROM hafyly_prg,school_mst  WHERE hap_cancel=1 AND hap_schoolid=scm_id AND hap_prgid=$hap_prgid";
+    $query=$CI->db->query($sql); 
+    $hafyly_data =$query->row();
+
+    //step-2
+    $sql2="SELECT pvd_totnovisit,pvd_remarks,COM_CMNM as monthname FROM prj_vst_dtl,com_mst WHERE pvd_month=COM_CMCD AND pvd_prgid=$hap_prgid";
+    $query2=$CI->db->query($sql2); 
+    $visit_details =$query2->result();
+
+    //step-3
+    $sql3="SELECT ewc_id,material_name,ewc_downworkday, CASE WHEN ewc_isworking=1 THEN 'Yes' ELSE 'No' END  working_status FROM eqp_wrk_cnd,material_mst WHERE ewc_prgid=$hap_prgid AND ewc_matid=material_id";
+    $query3=$CI->db->query($sql3); 
+    $downtimes_details =$query3->result();
+
+    //step-4
+    $sql4="SELECT red_desc,material_name FROM rep_eqp_dtl,material_mst WHERE red_prgid=$hap_prgid AND red_matid=material_id";
+    $query4=$CI->db->query($sql4); 
+    $eqp_replace_details =$query4->result();
+
+    //step-5
+    $sql5="SELECT etd_qun, CASE WHEN etd_type=1 THEN 'Theft' ELSE 'Damaged' END  equipment_type,material_name 
+    FROM eqp_theftdmg_dtl,material_mst WHERE etd_prgid=$hap_prgid AND etd_matid=material_id";
+    $query5=$CI->db->query($sql5); 
+    $eqp_damage_details =$query5->result();
+
+    //step-6
+    $sql6="SELECT sud_week1,sud_week2,sud_week3,sud_week4,COM_CMNM as monthname FROM slab_use_dtl,com_mst WHERE sud_month=COM_CMCD AND sud_prgid=$hap_prgid";
+    $query6=$CI->db->query($sql6); 
+    $labuse_details =$query6->result();
+
+    $page_data=[
+        'hafyly_data'           =>$hafyly_data,
+        'visit_details'         =>$visit_details,
+        'downtimes_details'     =>$downtimes_details,
+        'eqp_replace_details'   =>$eqp_replace_details,
+        'eqp_damage_details'    =>$eqp_damage_details,
+        'labuse_details'        =>$labuse_details
+    ];
+    
+    //$page_data['hafyly_data']=$hafyly_data;
+
+    $page_data['title']='Half Yearly Progress Report '. $hafyly_data->dist_name.' Smart Labs';
+   
+    $CI->load->library('Mytcpdf');
+    // create new PDF document
+    $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+    // remove default header/footer
+    $pdf->setPrintHeader(false);
+    $pdf->setPrintFooter(false);
+
+    // set default monospaced font
+    $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+    // set margins
+    $pdf->SetMargins(10, 15, 10);
+    // set auto page breaks
+    $pdf->SetAutoPageBreak(TRUE, 20);//PDF_MARGIN_BOTTOM
+
+     // set image scale factor
+     $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+    // ---------------------------------------------------------
+
+    // set font
+    $pdf->SetFont('dejavusans', '', 10);
+
+    // add a page
+    $pdf->AddPage();
+    // set text shadow effect
+    $pdf->setTextShadow(array('enabled'=>true, 'depth_w'=>0.2, 'depth_h'=>0.2, 'color'=>array(196,196,196), 'opacity'=>1, 'blend_mode'=>'Normal'));
+
+    // set bacground image
+    // Get the page width/height
+    // $ImageW = 105; 
+    // $ImageH = 150;
+    // $myPageWidth = $pdf->getPageWidth();
+    // $myPageHeight = $pdf->getPageHeight();
+    // $myX = ( $myPageWidth / 2 ) - 50;  //WaterMark Positioning
+    // $myY = ( $myPageHeight / 2 ) -100;
+    // $pdf->SetAlpha(0.09);
+    // $img_file = base_url('assets/images/new_beco.jpg');
+    // $pdf->Image($img_file,$myX, $myY, $ImageW, $ImageH, '', '', '', false, 200);
+    // $pdf->setPageMark();
+
+   
+    // set some text to print
+    //$txt = "TCPDF Example 002";
+    $html=$CI->load->view('backend/half_report_generater/helf_report_pdf_generate',$page_data, true);
+    // print a block of text using Write()
+   // $pdf->Write(0, $txt, '', 0, 'C', true, 0, false, false, 0);
+   //$pdf->SetDisplayMode('fullpage');
+    $pdf->writeHTML($html, true, false, true, false,'');
+    // ---------------------------------------------------------
+    //Close and output PDF document
+    //$output =$_SERVER['DOCUMENT_ROOT']."uploads/profile/".$user_data->user_id."/".$user_data->trns_invoiveno.".pdf";
+    //$output =$_SERVER['DOCUMENT_ROOT']."becoblue/uploads/profile/".$user_data->user_id."/".$user_data->trns_invoiveno.".pdf";
+    $pdf->Output('report.pdf', 'I');
+}
+
+
+//view
+
+<style> 
+    .position{
+        text-align:left;
+    }
+    th{
+        font-size: 15px;
+    }
+    td{
+        font-size: 12px;
+    
+    }
+    p strong{
+        font-size: 15px;
+    }
+     
+</style> 
+<?php $margin= (intval($hafyly_data->hap_eqpworkcond) === 2)?"25px":"25px"?>
+
+    <table cellpadding="4">
+        <tr> 
+            <td  width="60%"><h2><?= $title ?></h2></td> 
+            <td  width="40%"> <img src="<?= base_url('assets/images/half_pdf_logo.png');?>" alt="logo"></td>
+        </tr>
+    </table>
+    <p style="padding-bottom:<?= $margin; ?>"></p>
+    <hr>
+    <p><strong>Report No : </strong>  <?= $hafyly_data->hap_reptno; ?> </p> 
+    <p><strong>Lunching Date :</strong> <?= date('d-m-Y',strtotime($hafyly_data->hap_launchdate)); ?></p> 
+    <p><strong>Report For the Period From  :</strong> <?= date('d-m-Y',strtotime($hafyly_data->hap_reportfrom)); ?> <strong> To </strong> 
+        <?= date('d-m-Y',strtotime($hafyly_data->hap_reportto)); ?> </p> 
+    <p><strong>Name of the Agency :</strong> <?= $hafyly_data->hap_agencyname; ?> </p> 
+
+    <p style="padding-bottom:<?= $margin;?>"></p>
+    <table border="1" cellspacing="1" cellpadding="4" >  
+         <tbody style="padding:10px">
+            <tr >
+                <td scope="col" width="20%"><strong>UDISE code</strong></td> 
+                <td scope="col" width="80%" >
+                <table >
+                    <tr> 
+                        <?php
+                            $udise_code =str_split($hafyly_data->scm_udisecode);
+                            for($i=0; $i < count($udise_code); $i++){
+                        ?>
+                        <td style="<?= ($i == (count($udise_code)-1))?'':'border-right-width:thin';?>;" align="center"><?= $udise_code[$i];?></td> 
+                        <?php } ?>
+                    </tr>
+                </table>
+                </td> 
+            </tr>
+            <tr >
+                <td scope="col" width="20%">School Name</td>
+                <td scope="col" width="80%"><?= $hafyly_data->scm_name;?></td> 
+            </tr>
+            <tr >
+                <td scope="col" width="20%">Block</td>
+                <td scope="col" width="80%"><?= $hafyly_data->scm_block;?></td> 
+            </tr>
+         </tbody>
+    </table>  
+
+    <p style="padding-bottom:<?= $margin;?>"></p>
+
+    <h3 >1. Project Coordinator Visit Details</h3>
+    <p><strong>Project Coordinator Name:</strong> xyz Dash</p> 
+    <table border="1" cellspacing="1" cellpadding="4" > 
+        <thead>
+            <tr style="background-color:#d9d9d9;">
+                <th scope="col" align="center">Sl. No.</th>
+                <th scope="col" align="center">Month </th>
+                <th scope="col" align="center">Total No. of Visits </th>
+                <th scope="col" align="center">Remarks</th> 
+            </tr>
+        </thead>
+     
+        <tbody>
+            <tr>
+                <td align="center">1</td>
+                <td align="center"><?= $visit_details[0]->monthname; ?></td>
+                <td align="right"><?= $visit_details[0]->pvd_totnovisit; ?></td>
+                <td align="center"><?= $visit_details[0]->pvd_remarks; ?></td>
+                
+                 
+            </tr>
+            <tr>
+                <td align="center">2</td>
+                <td align="center"><?= $visit_details[1]->monthname; ?></td>
+                <td align="right"><?= $visit_details[1]->pvd_totnovisit; ?></td>
+                <td align="center"><?= $visit_details[1]->pvd_remarks; ?></td>
+                 
+            </tr>
+            <tr>
+                <td align="center">3</td>
+                <td align="center"><?= $visit_details[2]->monthname; ?></td>
+                <td align="right"><?= $visit_details[2]->pvd_totnovisit; ?></td>
+                <td align="center"><?= $visit_details[2]->pvd_remarks; ?></td>
+                 
+            </tr>
+            <tr>
+                <td align="center">4</td>
+                <td align="center"><?= $visit_details[3]->monthname; ?></td>
+                <td align="right"><?= $visit_details[3]->pvd_totnovisit; ?></td>
+                <td align="center"><?= $visit_details[3]->pvd_remarks; ?></td>
+                 
+            </tr>
+            <tr>
+                <td align="center">5</td>
+                <td align="center"><?= $visit_details[4]->monthname; ?></td>
+                <td align="right"><?= $visit_details[4]->pvd_totnovisit; ?></td>
+                <td align="center"><?= $visit_details[4]->pvd_remarks; ?></td>
+                 
+            </tr>
+            <tr>
+                <td align="center">6</td>
+                <td align="center"><?= $visit_details[5]->monthname; ?></td>
+                <td align="right"><?= $visit_details[5]->pvd_totnovisit; ?></td>
+                <td align="center"><?= $visit_details[5]->pvd_remarks; ?></td>
+                 
+            </tr>
+        </tbody>
+        <tfoot >
+            <tr >
+                <td colspan="2" style="text-align:center; font-weight:bold">Total For 6 Months</td>
+                <td  align="right" style="border-right-color:white;border-bottom-color:black; border-top-color:black;font-weight:bold">
+                   
+                <?=  $visit_details[0]->pvd_totnovisit += $visit_details[1]->pvd_totnovisit +=$visit_details[2]->pvd_totnovisit += $visit_details[3]->pvd_totnovisit+=$visit_details[4]->pvd_totnovisit +=$visit_details[5]->pvd_totnovisit ;?> </td>
+                <td style="border-left-color:white;border-bottom-color:black; border-top-color:black"></td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <p style="padding-bottom:<?= $margin;?>"></p>
+
+    <h3 >2. Equipment Downtime Details</h3> 
+    <table border="1" cellspacing="1" cellpadding="4" > 
+        <tr >
+            <td width="8%" align="center">2.1</td>
+            <td width="82%"scope="col" align="left">Are all equipment (Server, Terminals (Thin Clients), Smart
+                TV, Laptop, UPS, Generator, Servo Stabilizer) are in working
+                condition? If Not, please mention the details in the table? </td>
+            <td width="10%" scope="col" align="center"> <?= $hafyly_data->wqp_data ?></td>
+             
+        </tr> 
+        <tr >
+            <td width="8%" align="center">2.2</td>
+            <td width="92%"scope="col" colspan="2">Is equipment Downtime School Working Days?</td>
+          
+        </tr> 
+       
+    </table>
+
+    <p style="padding-bottom:<?= $margin;?>"></p>
+    
+    <?php if(intval($hafyly_data->hap_eqpworkcond) === 2){ ?>
+    <table border="1" cellspacing="0" cellpadding="5"> 
+        <thead>
+            <tr style="background-color:#d9d9d9;">
+                <th scope="col">Equipment</th>
+                <th scope="col">Total No. of downtime in  Working days </th>
+                <th scope="col">Is the equipment presently working?</th>
+                <th scope="col">Complaint Logged Date</th>
+                <th scope="col" >Complaint Closure Date </th>
+            </tr>
+        </thead>
+     
+        <tbody>
+            <?php  foreach($downtimes_details as $dw_data) {
+                $downtime_logs_details =get_table_data('eqp_wrkcnd_dtl','ewd_logdate,ewd_closedate','ewd_ewcid='.$dw_data->ewc_id)->result(); ?>
+            <tr>
+                <td><?= $dw_data->material_name; ?> </td>
+                <td><?= $dw_data->ewc_downworkday; ?></td>
+                <td><?= $dw_data->working_status; ?></td>
+                <td >
+                    <table border="1" cellspacing="1" cellpadding="2" width="100%">
+                        <?php foreach ($downtime_logs_details as $dwdata){ ?>
+                            <tr >
+                                <td><?= date('d-m-Y', strtotime($dwdata->ewd_logdate));?> </td>
+                            </tr>                          
+                            
+                        <?php } ?>
+                    </table>
+                </td>
+                <td  >
+                    <table border="1" cellspacing="1" cellpadding="2" width="100%" style="border-spacing: 0px;">
+                        <tbody>
+                            <?php foreach ($downtime_logs_details as $dwdata){ ?>
+                                <tr>
+                                    <td><?= date('d-m-Y', strtotime($dwdata->ewd_closedate));?> </td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table> 
+                </td>
+            </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+    <?php } ?>
+
+    <p style="padding-bottom:<?= $margin;?>"></p>
+
+    <h3 >3.Educational Content Details</h3>
+
+    <table border="1" cellspacing="1" cellpadding="4" > 
+        <tr >
+            <td width="8%" align="center">3.1</td>
+            <td width="82%"scope="col" align="left">Educational content is installed in all the Server and Laptop. Pls. mention the following details. </td>
+            <td width="10%" scope="col" align="center"> <?=  $hafyly_data->edu_data; ?></td> 
+        </tr> 
+        <tr >
+            <td width="8%" align="center">3.2</td>
+            <td width="82%"scope="col" align="left">Educational software framework </td>
+            <td width="10%" scope="col" align="center"> <?= $hafyly_data->edu_swdata; ?></td> 
+        </tr>
+    </table> 
+
+    <p style="padding-bottom:<?= $margin;?>"></p> 
+
+    <h3 >4.Recurring Service Details (Please Mention The Quantity Consumed In The Last Column)</h3>
+
+    <table border="1" cellspacing="1" cellpadding="4" > 
+        <tr >
+            <td width="8%" align="center">4.1</td>
+            <td width="65%">Faulty Logging Register(200 pages) </td> 
+            <td width="5%" scope="col" align="center"> <?= $hafyly_data->rec_fault; ?></td> 
+            <td  width="21%"> Qty consumed:<?= $hafyly_data->hap_faulogregcnt;?></td>
+        </tr> 
+        <tr >
+            <td width="8%" align="center">4.2</td>
+            <td width="65%">Stock Register (200 pages)  </td> 
+            <td width="5%" scope="col" align="center"> <?= $hafyly_data->rec_stro ;?> </td> 
+            <td  width="21%"> Qty consumed:<?= $hafyly_data->hap_storegcnt;?></td>
+        </tr> 
+        <!-- <tr >
+            <td width="8%" align="center">4.3</td>
+            <td width="65%">Other Register (200 pages)  </td> 
+            <td width="5%" scope="col" align="center"><?= $hafyly_data->rec_stro ;?></td> 
+            <td  width="21%"> Qty consumed:<?= $hafyly_data->hap_othregcnt ;?></td>
+        </tr>  -->
+        <tr >
+            <td width="8%" align="center">4.3</td>
+            <td width="65%">Blank Sheet of A4 Size ( 75 GSM) (12 Packets Yearly, 500 sheets in each packet)</td> 
+            <td width="5%" scope="col" align="center"><?= $hafyly_data->rec_a4shet ;?></td> 
+            <td  width="21%"> Qty consumed:<?= $hafyly_data->hap_ba4sheetcnt ;?></td>
+        </tr> 
+        <tr >
+            <td width="8%" align="center">4.4</td>
+            <td width="65%">Refills & New Cartridge</td> 
+            <td width="5%" scope="col" align="center"><?= $hafyly_data->rec_catrg ;?></td> 
+            <td  width="21%"> Qty consumed:<?= $hafyly_data->hap_catridgecnt ;?></td>
+        </tr>
+        <tr >
+            <td width="8%" align="center">4.5</td>
+            <td width="65%">USB Drives (Qty -2 , 16 GB) </td> 
+            <td width="5%" scope="col" align="center"><?= $hafyly_data->rec_usbdr ;?></td> 
+            <td  width="21%"> Qty consumed:<?= $hafyly_data->hap_usbdrivecnt ;?></td>
+        </tr>
+        <tr >
+            <td width="8%" align="center">4.6</td>
+            <td width="65%">White Board Marker with Duster (Qty:12)</td> 
+            <td width="5%" scope="col" align="center"><?= $hafyly_data->rec_marker ;?></td> 
+            <td  width="21%"> Qty consumed:<?= $hafyly_data->hap_markercnt ;?></td>
+        </tr>
+        <tr >
+            <td width="8%" align="center">4.7</td>
+            <td width="65%" >Electricity bill paid by the agency</td> 
+            <td width="26.2%" scope="col" align="center"  ><?= $hafyly_data->rec_elcbill ;?></td> 
+             
+        </tr>
+        <tr >
+            <td width="8%" align="center">4.8</td>
+            <td width="65%">Internet connectivity available or Not</td> 
+            <td width="26.2%" scope="col" align="center" ><?= $hafyly_data->rec_intco ;?></td> 
+             
+        </tr>
+        <tr >
+            <td width="8%" align="center">4.9</td>
+            <td width="65%">If Internet connectivity is Not available, give reason there of </td> 
+            <td width="26.2%" scope="col" align="center" > <?= $hafyly_data->hap_intconndtl;?></td> 
+             
+        </tr>
+    </table> 
+    
+    <p style="padding-bottom:<?= $margin;?>"></p>
+
+
+    <h4 align="center" >Electrical Meter Reading And Generator Meter Reading</h4 > 
+    <table border="1" cellspacing="1" cellpadding="4" > 
+         <thead>
+         <tr style="background-color:#d9d9d9;">
+                <th scope="col" align="center">Equipment</th>
+                <th scope="col" align="center">Previous Meter Reading</th>
+                <th scope="col" align="center">Present Meter Reading</th> 
+            </tr>
+         </thead>
+         <tbody>
+            <tr >
+                <td scope="col" align="center"><strong>Generator</strong></td>
+                <td scope="col" align="center"><?= $hafyly_data->hap_genprevmeter;?></td>
+                <td scope="col" align="center"><?= $hafyly_data->hap_genpremeterred;?></td> 
+            </tr>
+            <tr >
+                <td scope="col" align="center"><strong>Electrical Meter</strong></td>
+                <td scope="col" align="center"><?= $hafyly_data->hap_electprevmeter;?></td>
+                <td scope="col" align="center"><?= $hafyly_data->hap_electpremeter;?></td> 
+            </tr>
+         </tbody>
+    </table>   
+
+    <p style="padding-bottom:<?= $margin;?>"></p>
+    <p style="padding-bottom:<?= $margin;?>"></p>
+
+    <h3 >5. Equipment Replacement Details</h3>
+    <table border="1" cellspacing="1" cellpadding="4">  
+        <tbody>
+            <tr>
+                <td  width="8%">5</td>
+                <td width="84%">Replacement of any Equipment by Agency</td>
+                <td width="8%"><font class="displayData"><?= $hafyly_data->rec_repeqpagn;?></font></td>
+            </tr> 
+        </tbody>
+    </table> 
+     
+    <p style="padding-bottom:<?= $margin;?>"></p>
+    <?php if(intval($hafyly_data->hap_repeqpagn) === 1){ ?>                            
+    <table border="1" cellspacing="1" cellpadding="4" > 
+        <thead>
+            <tr style="background-color:#d9d9d9;">
+                <th style="text-align:center">Name of the Equipment</th>
+                <th style="text-align:center">Reason for Replacement</th>
+            </tr>  
+        </thead> 
+        <tbody>
+        <?php  foreach($eqp_replace_details as $rdata){?>
+            <tr>
+                <td style="text-align:center"><?=  $rdata->material_name;  ?></td>
+                <td style="text-align:center"><?= $rdata->red_desc;?></td> 
+            </tr> 
+        <?php  } ?> 
+        </tbody>
+    </table>
+    <?php  } ?> 
+    <p style="padding-bottom:<?= $margin;?>"></p>
+
+    <h3 >6. Theft/Damaged Equipment</h3>
+    <table border="1" cellspacing="1" cellpadding="4">  
+        <tbody>
+            <tr>
+                <td  width="8%">6</td>
+                <td width="84%">Any equipment theft/damage</td>
+                <td width="8%"><font class="displayData"><?= $hafyly_data->eqptheftdmg ?></font></td>
+            </tr> 
+        </tbody>
+    </table> 
+    <p style="padding-bottom:<?= $margin;?>"></p>
+    <?php if(intval($hafyly_data->hap_eqptheftdmg) === 1){ ?>  
+    <table border="1" cellspacing="1" cellpadding="4" > 
+        <thead>
+             <tr style="background-color:#d9d9d9;">
+                 <th style="text-align:center">Name Of The Equipment</th>
+             </tr> 
+        </thead> 
+    </table>
+    <table border="1" cellspacing="1" cellpadding="4" > 
+        <thead>
+             <tr style="background-color:#d9d9d9;">
+                <th style="text-align:center">Equipment</th>
+                <th style="text-align:center">Type</th>
+                <th style="text-align:center">Quantity</th>
+             </tr> 
+
+        </thead> 
+        <tbody>
+            <?php foreach($eqp_damage_details as $tdata){?>
+                <tr>
+                    <td style="text-align:center"> <?= $tdata->material_name; ?></td>
+                    <td style="text-align:center"><?= $tdata->equipment_type;?></td>
+                    <td style="text-align:center"><?= $tdata->etd_qun;?></td>
+                </tr> 
+            <?php }?>
+        </tbody>
+    </table>
+    <?php  } ?> 
+    <p style="padding-bottom:<?= $margin;?>"></p>
+
+    <h3 >7. Lab Utilization Details</h3>
+
+    <p><strong>Total No. Of Students In 9th Standard :</strong><span><?= $hafyly_data->hap_totstudent9 ?></span></p>
+    <p><strong>No. Of Students Attending Smart Lab In 9th Standard : </strong><span> <?= $hafyly_data->hap_totstudent9attn ?></span></p>
+    <p><strong>Total No. Of Students In 10th Standard :</strong><span><?= $hafyly_data->hap_totstudent10 ?></span></p>
+    <p><strong>No. Of Students Attending Smart Lab In 10th Standard :</strong><span> <?= $hafyly_data->hap_totstudent10attn ?></span></p>
+
+    <table border="1" cellspacing="1" cellpadding="4" > 
+        <thead>
+             <tr style="background-color:#d9d9d9;">
+                 <th style="text-align:center">No. of hours for which the Smart lab has been utilized(weekly)</th>
+             </tr> 
+        </thead> 
+    </table>
+    <table border="1" cellspacing="1" cellpadding="4" > 
+        <thead>
+             <tr style="background-color:#d9d9d9;">
+                <th style="text-align:center">Month</th>
+                <th style="text-align:center">1st Week</th>
+                <th style="text-align:center">2nd Week</th>
+                <th style="text-align:center">3rd Week</th>
+                <th style="text-align:center">4th Week</th>
+             </tr> 
+
+        </thead> 
+        <tbody>
+            <tr>
+                <td style="text-align:center"><?= $labuse_details[0]->monthname ?></td>
+                <td style="text-align:center"><?= $labuse_details[0]->sud_week1 ?></td>
+                <td style="text-align:center"><?= $labuse_details[0]->sud_week2 ?></td>
+                <td style="text-align:center"><?= $labuse_details[0]->sud_week3 ?></td>
+                <td style="text-align:center"><?= $labuse_details[0]->sud_week4 ?></td>
+            </tr> 
+            <tr>
+                <td style="text-align:center"><?= $labuse_details[1]->monthname ?></td>
+                <td style="text-align:center"><?= $labuse_details[1]->sud_week1 ?></td>
+                <td style="text-align:center"><?= $labuse_details[1]->sud_week2 ?></td>
+                <td style="text-align:center"><?= $labuse_details[1]->sud_week3 ?></td>
+                <td style="text-align:center"><?= $labuse_details[1]->sud_week4 ?></td>
+            </tr> 
+            <tr>
+                <td style="text-align:center"><?= $labuse_details[2]->monthname ?></td>
+                <td style="text-align:center"><?= $labuse_details[2]->sud_week1 ?></td>
+                <td style="text-align:center"><?= $labuse_details[2]->sud_week2 ?></td>
+                <td style="text-align:center"><?= $labuse_details[2]->sud_week3 ?></td>
+                <td style="text-align:center"><?= $labuse_details[2]->sud_week4 ?></td>
+            </tr> 
+            <tr>
+                <td style="text-align:center"><?= $labuse_details[3]->monthname ?></td>
+                <td style="text-align:center"><?= $labuse_details[3]->sud_week1 ?></td>
+                <td style="text-align:center"><?= $labuse_details[3]->sud_week2 ?></td>
+                <td style="text-align:center"><?= $labuse_details[3]->sud_week3 ?></td>
+                <td style="text-align:center"><?= $labuse_details[3]->sud_week4 ?></td>
+            </tr> 
+            <tr>
+                <td style="text-align:center"><?= $labuse_details[4]->monthname ?></td>
+                <td style="text-align:center"><?= $labuse_details[4]->sud_week1 ?></td>
+                <td style="text-align:center"><?= $labuse_details[4]->sud_week2 ?></td>
+                
+
+
+
+<td style="text-align:center"><?= $labuse_details[4]->sud_week3 ?></td>
+                <td style="text-align:center"><?= $labuse_details[4]->sud_week4 ?></td>
+            </tr> 
+            <tr>
+                <td style="text-align:center"><?= $labuse_details[5]->monthname ?></td>
+                <td style="text-align:center"><?= $labuse_details[5]->sud_week1 ?></td>
+                <td style="text-align:center"><?= $labuse_details[5]->sud_week2 ?></td>
+                <td style="text-align:center"><?= $labuse_details[5]->sud_week3 ?></td>
+                <td style="text-align:center"><?= $labuse_details[5]->sud_week4 ?></td>
+            </tr> 
+        </tbody>
+    </table>
+     
+//countrolot
+function helf_report_pdf_generate($hap_prgid){
+        if(!$this->session->userdata('userlogin')){
+            redirect('home');
+        }
+        generate_invoice($hap_prgid); //Haply report generater 
+}
+
+<?php 
+defined('BASEPATH') OR exit('No direct script access allowed');
+require_once APPPATH.'third_party//tcpdf/tcpdf.php';
+//require_once dirname(__FILE__) . '/tcpdf/tcpdf.php';
+
+class Mytcpdf extends TCPDF{
+    function __construct(){
+        parent::__construct();
+        
+    }
+}
+
+?>
+
+
+
+
+
+    }
