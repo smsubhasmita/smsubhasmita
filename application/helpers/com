@@ -1,0 +1,323 @@
+<?php
+if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+// sanitize input box value
+function clean_input($data) {
+    $CI =&  get_instance();
+    $CI->load->database();
+    $data = trim($data);
+    $data = stripslashes($data);
+    return $data = htmlspecialchars($data);
+}
+
+function get_system_time(){
+    $ci=& get_instance();
+    $ci->load->database();
+    $system_time = "SELECT TO_CHAR(SYSDATE,'HH24.MI') as DT from dual";
+    $res =$ci->db->query($system_time);
+    $sqlrow=$res->row();
+    return $sqlrow->DT;
+}
+function get_system_date(){
+    $ci=& get_instance();
+    $ci->load->database();
+    $system_date = "SELECT TO_CHAR(SYSDATE,'yyyy-MM-dd') as DAT FROM DUAL";
+    $res =$ci->db->query($system_date);
+    $sqlrow=$res->row();
+    return $sqlrow->DAT; 
+}
+function get_system_date_time(){
+    $ci=& get_instance();
+    $ci->load->database();
+    $system_date = "SELECT TO_CHAR(SYSDATE,'yyyy-MON-dd HH24.MI') as DAT FROM DUAL";
+    $res =$ci->db->query($system_date);
+    $sqlrow=$res->row();
+   // return $sqlrow->DAT;//2021-10-13 12:13:55
+    return  date('d-M-Y H:i:s',strtotime($sqlrow->DAT));
+}
+function oracle_date_time($date_time){
+    $date_time=date('d-M-y H:i', strtotime($date_time)); //to_date('18-OCT-21 15:45', 'dd-mon-yyyy hh24:mi')
+    // OraDateTime_Fn = " TO_DATE( " & " '" & Format(dt, "yyyy-MMM-dd HH-mm-ss") & "'" & ",'yyyy-MON-dd HH24:MI:SS')" & ""
+    return "TO_CHAR('$date_time', 'yyyy-MON-dd HH24:MI')";
+}
+function get_date(){
+    return  date('Y-m-d');
+}
+function system_date($date=""){
+    if($date !=""){
+        return  date('d-M-Y',strtotime($date));
+    }else{
+        return  date('d-M-Y');
+    }
+   
+}
+function get_time(){
+    return  date('H:i:s');
+}
+function get_date_time(){
+    return  date('Y-m-d H:i:s');
+}
+function get_ip(){
+   return  gethostbyname(gethostname());
+}
+function int_to_float($int_val){
+    return sprintf("%.2f", $int_val);
+}
+//get limited string a long string
+function limit_text($text, $limit) {
+    if (str_word_count($text, 0) > $limit) {
+        $words = str_word_count($text, 2);
+        $pos   = array_keys($words);
+        $text  = substr($text, 0, $pos[$limit]) . '...';
+    }
+    return $text;
+}
+//convert stribg to ucwords
+function string_ucword($string){
+    $string=strtolower($string);
+    return ucwords($string);
+}
+//convert stribg to uppercase
+function string_upper($string){
+    $string=strtolower($string);
+    return strtoupper($string);
+}
+function uniq_no_generation($serial_code,$client_code,$job_nature,$status){
+    $ci=& get_instance();
+    $ci->load->database();
+    //get last 2 digits of year
+    $system_date = "SELECT TO_CHAR(SYSDATE,'yy') as DAT FROM DUAL";
+    $res =$ci->db->query($system_date);
+    $sqlrow=$res->row();
+    $year=$sqlrow->DAT; //21
+
+    //Serial Code
+    $serial_code = sprintf('%03d',$serial_code);
+
+    //client code
+    $sql="SELECT PTM_PSNM,PTM_PTCD FROM PTY_MST01 WHERE PTM_TPCD=8  AND PTM_PTCD=$client_code";
+    $query =$ci->db->query($sql);
+    $PTM_PSNM=$query->row()->PTM_PSNM;
+
+    //JOB NATURE
+    $sql2="SELECT COM_CMCD,COM_CMNM,COM_SNAM,COM_CODE FROM COMMON.COM_MST WHERE COM_TPCD=210 AND COM_CMCD=$job_nature";
+    $query2 =$ci->db->query($sql2);
+    $COM_SNAM=$query2->row()->COM_SNAM;
+
+    $final_gen_num=$year."-".$serial_code."-".$PTM_PSNM."-".$COM_SNAM."-".$status;
+    return $final_gen_num;
+}
+//GET Primary key with auto increement
+function invoice_get_pk_id($TB_NAME,$TB_COLUMN_NAME,$currency_type,$billing_branch){
+    $ci=& get_instance();
+    $ci->load->database();
+
+    if(intval($currency_type) === 2922){
+        $sql="SELECT nvl(max($TB_COLUMN_NAME),0) from $TB_NAME WHERE CIH_BLBR=$billing_branch AND CIH_CYTP=2922";
+        //SELECT nvl(max(CIH_SLNO),0) from CIV_HDR01 WHERE CIH_BLBR=201 AND CIH_CYTP=2922
+    }else{
+        $sql="SELECT nvl(max($TB_COLUMN_NAME),0) from $TB_NAME WHERE CIH_BLBR=$billing_branch AND CIH_CYTP<>2922";
+        //SELECT nvl(max(CIH_SLNO),0) from CIV_HDR01 WHERE CIH_BLBR=201 AND CIH_CYTP<>2922
+    }
+
+    //$sql="SELECT nvl(max($TB_COLUMN_NAME),0) from $TB_NAME";
+    $sqlqry=$ci->db->query($sql);
+    $sqlrows= $sqlqry->row();
+    foreach($sqlrows as $r){
+        $sqlrow= $r;
+    }
+    if ($sqlrow <= 0) {
+        $GetId_Fn = 1;
+    }
+    else{
+        $GetId_Fn = $sqlrow + 1;
+    }
+    return $GetId_Fn;
+}
+
+
+function invoice_uniq_no_generation($serial_code,$currency_type,$billing_branch){ //1 2922 201
+    //WET/BS/21-22/001 
+    //WETBSR/21-22/101
+    $ci=& get_instance();
+    $ci->load->database();
+    //GET BILLING BRANCH SHORT NAME
+    $sql="SELECT BRM_BSNM FROM COMMON.BRN_MST WHERE  BRM_BRCD=$billing_branch";
+    $query =$ci->db->query($sql);
+    $BRM_BSNM=$query->row()->BRM_BSNM;
+
+    //get last 2 digits of year
+    //$system_date = "SELECT TO_CHAR(SYSDATE,'yy') as DAT,TO_CHAR(SYSDATE,'yy')+ 1 as DATT FROM DUAL";
+    $system_date="SELECT  FIM_FYST,FIM_FNCD,FIM_FYCD FROM COMMON.FIN_MST WHERE FIM_FNCD=(SELECT MAX(FIM_FNCD) FROM COMMON.FIN_MST)";
+    $res =$ci->db->query($system_date);
+    $sqlrow=$res->row();
+    //$year=$sqlrow->DAT; //21
+    //$next_year=$sqlrow->DATT; //22
+
+    $year=substr($sqlrow->FIM_FYCD,0,2);
+    $next_year=substr($sqlrow->FIM_FYCD,2,4);
+    //Serial Code
+    $serial_code = sprintf('%03d',$serial_code);
+
+    if(intval($currency_type) === 2922){ //INR
+        $final_gen_num="WET".$BRM_BSNM."/".$year."-".$next_year."/".$serial_code;
+    }else{
+        $final_gen_num="WET/".$BRM_BSNM."/".$year."-".$next_year."/".$serial_code;
+    }
+
+    return  $final_gen_num;
+}
+function get_percentage($CIH_IVCD,$payment_receive_date,$ERU_USCD,$ERU_EMCD){
+    $ci=& get_instance();
+    $ci->load->database();
+    //get orderid through invoice id
+    $sql="SELECT CIH_IVTP,CIH_DVCD,CIH_DATE,CIH_PTCD FROM CIV_HDR01 WHERE CIH_IVCD=$CIH_IVCD AND CIH_CANC=0";
+    $query =$ci->db->query($sql);
+    $invoice_data=$query->row();
+    if($invoice_data){
+        if($invoice_data->CIH_IVTP == 1){ //INVOICE TYPE(1-DESCPATH TYPE, 2-BY MENU)
+            //GET ORDER ID BY denivery id
+            $CDH_DVCD=$invoice_data->CIH_DVCD; //delivery id
+            $sql="SELECT CDH_ODCD FROM CDV_HDR01 WHERE CDH_DVCD=$CDH_DVCD";
+            $query =$ci->db->query($sql);
+            $delivery_data=$query->row();
+            $CIH_DVCD=$delivery_data->CDH_ODCD; //order id
+        }else{
+            $CIH_DVCD=$invoice_data->CIH_DVCD; //order id
+        }
+        //GET ORDER TYPE(CONTRACT OR QUOTATION) IN ORDER TABLE
+        $order_sql="SELECT COH_TPCD,COH_CQCD FROM COR_HDR01 WHERE COH_ODCD=$CIH_DVCD";
+        $order_query =$ci->db->query($order_sql);
+        $order_data=$order_query->row();
+        $COH_TPCD=$order_data->COH_TPCD; //ORDER TYPE 1-CONTRACT, 2-QUOTATION
+        if($COH_TPCD == 1){
+            $CSH_SCCD=$order_data->COH_CQCD; // contract id
+            //get project type using contract table
+            $_sql="SELECT CSH_PJTP FROM CSC_HDR01 WHERE CSH_SCCD=$CSH_SCCD";
+            $_query =$ci->db->query($_sql);
+            $_data=$_query->row();
+            $PJTP=$_data->CSH_PJTP;
+        }else{
+            $COH_CQCD=$order_data->COH_CQCD; //quotation id
+            //get project type using  quotation and inquiry table
+            $_sql="SELECT CED_PJTP FROM CQU_HDR01,CEN_DTL01 WHERE CQH_CQCD=$COH_CQCD AND CQH_CECD=CED_CECD";
+            $_query =$ci->db->query($_sql);
+            $_data=$_query->row();
+            $PJTP=$_data->CED_PJTP;
+        }
+        //GET INCENTIVE PERCENTAGE BY EMPLOYEE CODE AND PROJECT TYPE
+        $incentive_sql="SELECT NVL(INM_INPR,0) INM_INPR,NVL(INM_ADPR,0)INM_ADPR FROM INC_MST01 WHERE INM_EMCD=$ERU_EMCD AND INM_PJCD=$PJTP AND INM_CANC=0";
+        $incentive_query =$ci->db->query($incentive_sql);
+        $incentive_data=$incentive_query->row();
+
+        //GET CREDIT DAYS BY CLIENT MST
+        $PTM_PTCD=$invoice_data->CIH_PTCD;
+        $client_sql="SELECT NVL(PTM_CDAY,0) as PTM_CDAY FROM PTY_MST01 WHERE PTM_PTCD=$PTM_PTCD  AND PTM_CANC=0";
+        $client_query =$ci->db->query($client_sql);
+        $client_data=$client_query->row();
+        //get credit day
+        $credit_day=intval($client_data->PTM_CDAY);
+        $invoice_date = strtotime($invoice_data->CIH_DATE);
+        $total_credit_date = strtotime("+".$credit_day." day", $invoice_date); // get total credit day to invoice date to add credit day
+
+        //payment receive date
+        $payment_receive_date=strtotime($payment_receive_date);
+        if($incentive_data){
+            //invoice date to compare paynebt receive date
+            if($payment_receive_date >  $total_credit_date){
+                return $incentive_data->INM_ADPR;
+            }else{
+                return $incentive_data->INM_INPR;
+            }
+        }
+    }
+
+
+}
+function currency_symbol($currency_type){
+    $currency_symbol_array=[
+        2921   =>'A$',
+        2922   =>'₹',
+        2923   =>'$',
+        2924   =>'£',
+        2944   =>'€',
+        2945   =>'C$'
+    ];
+    return  $currency_symbol_array[$currency_type];
+   
+}
+function number_to_words($number,$currency_type){ 
+    $no = floor($number);
+    $point = round($number - $no, 2) * 100;
+    $hundred = null;
+    $digits_1 = strlen($no);
+    $i = 0;
+    $str = array();
+    $words = array('0' => '', '1' => 'One', '2' => 'Two',
+    '3' => 'Three', '4' => 'Four', '5' => 'Five', '6' => 'Six',
+    '7' => 'Seven', '8' => 'Eight', '9' => 'Nine',
+    '10' => 'Ten', '11' => 'Eleven', '12' => 'Twelve',
+    '13' => 'Thirteen', '14' => 'Fourteen',
+    '15' => 'Fifteen', '16' => 'Sixteen', '17' => 'Seventeen',
+    '18' => 'Eighteen', '19' =>'Nineteen', '20' => 'Twenty',
+    '30' => 'Thirty', '40' => 'Forty', '50' => 'Fifty',
+    '60' => 'Sixty', '70' => 'Seventy',
+    '80' => 'Eighty', '90' => 'Ninety');
+    $digits = array('', 'Hundred', 'Thousand', 'Lakh', 'Crore');
+    while ($i < $digits_1) {
+        $divider = ($i == 2) ? 10 : 100;
+        $number = floor($no % $divider);
+        $no = floor($no / $divider);
+        $i += ($divider == 10) ? 1 : 2;
+        if ($number) {
+            $plural = (($counter = count($str)) && $number > 9) ? 's' : null;
+            $hundred = ($counter == 1 && $str[0]) ? ' and ' : null;
+            $str [] = ($number < 21) ? $words[$number] .
+                " " . $digits[$counter] . $plural . " " . $hundred
+                :
+                $words[floor($number / 10) * 10]
+                . " " . $words[$number % 10] . " "
+                . $digits[$counter] . $plural . " " . $hundred;
+        } else $str[] = null;
+    }
+    $str = array_reverse($str);
+    $result = implode('', $str);
+
+    //$points = ($point) ? "." . $words[$point / 10] . " " . $words[$point = $point % 10] : '';
+    //echo $result . "Rupees " . $points . " Paise";   
+
+    //COUSTOM LINES
+    $points = ($point) ? $words[$point ]:'';
+
+    $currency_type_array=[
+        'AUD'   =>2921,
+        'INR'   =>2922,
+        'USD'   =>2923,
+        'GBP'   =>2924,
+        'EURO'  =>2944,
+        'CAD'   =>2945
+    ];
+    $currency_name_array=[
+        2921   =>'Australian Dollars',
+        2922   =>'Rupees',
+        2923   =>'U.S. Dollars',
+        2924   =>'Pounds Sterling',
+        2944   =>'Euro',
+        2945   =>'Canadian Dollars'
+    ];
+    $currency_name2_array=[
+        2921   =>'A$',
+        2922   =>'Paise',
+        2923   =>'Cents',
+        2924   =>'£',
+        2944   =>'Cents',
+        2945   =>'C$'
+    ];
+    if(!empty($points)){
+        return $result ." ". $currency_name_array[$currency_type]." " . $points ." ". $currency_name2_array[$currency_type]."  Only.";
+    }else{
+        return  $result ." ".$currency_name_array[$currency_type]. " Only.";
+    }
+
+    
+}
