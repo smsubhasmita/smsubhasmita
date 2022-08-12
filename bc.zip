@@ -1,0 +1,660 @@
+ 
+<!DOCTYPE html>
+<html class="no-js" lang="">
+<head>
+    <!-- Meta Data -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>BecoBlue |Home</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="https://becoblue.com/assets/images/fav.jpg">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://becoblue.com/assets/dependencies/bootstrap/css/bootstrap.min.css">
+    <!-- FontAwesome CSS -->
+    <link rel="stylesheet" href="https://becoblue.com/assets/dependencies/fontawesome/css/all.min.css">
+    <!-- <link rel="stylesheet" href="https://becoblue.com/assets/dependencies/fontawesome/css/all.min.color.css"> -->
+    <!-- Flaticon CSS -->
+    <link rel="stylesheet" href="https://becoblue.com/assets/dependencies/flaticon/flaticon.css">
+    <!-- Owl Carousel CSS -->
+    <link rel="stylesheet" href="https://becoblue.com/assets/dependencies/owl.carousel/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://becoblue.com/assets/dependencies/owl.carousel/css/owl.theme.default.min.css">
+    <!-- Animated Headlines CSS -->
+    <link rel="stylesheet" href="https://becoblue.com/assets/dependencies/jquery-animated-headlines/css/jquery.animatedheadline.css">
+    <!-- Magnific Popup CSS -->
+    <link rel="stylesheet" href="https://becoblue.com/assets/dependencies/magnific-popup/css/magnific-popup.css">
+    <!-- Animate CSS -->
+    <link rel="stylesheet" href="https://becoblue.com/assets/dependencies/animate.css/css/animate.min.css">
+    <!-- Meanmenu CSS -->
+    <link rel="stylesheet" href="https://becoblue.com/assets/dependencies/meanmenu/css/meanmenu.min.css">
+    <!-- Site Stylesheet -->
+    <link rel="stylesheet" href="https://becoblue.com/assets/css/app.css">
+    <link rel="stylesheet" href="https://becoblue.com/assets/css/my-style.css">
+    <script async="" src="https://www.google-analytics.com/analytics.js"></script>
+
+    <link  type='text/css' href="https://becoblue.com/assets/dependencies/sweetalert2/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://becoblue.com/assets/dependencies/select2/css/select2.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" /> -->
+
+    <!-- Google Web Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900,900i&display=swap" rel="stylesheet">
+    
+    <!-- Jquery Js -->
+    <script src="https://becoblue.com/assets/dependencies/jquery/js/jquery.min.js"></script>
+    <script src="https://becoblue.com/assets/js/sweetalert2@11.js"></script>
+    <script src="https://becoblue.com/assets/dependencies/select2/js/select2.min.js"></script>
+     <!-- Jquery Js -->
+    <!-- Site Scripts -->
+    <!-- <script src="https://becoblue.com/assets/js/app.js"></script> -->
+    <script src="https://becoblue.com/assets/js/my_js.js"></script>
+    <script type="text/javascript" src="https://becoblue.com/assets/js/validator.min.js"></script>
+
+   
+</head>
+
+<body class="sticky-header">
+    <!-- ScrollUp Start Here -->
+    <a href="#wrapper" data-type="section-switch" class="scrollup">
+        <i class="fas fa-angle-double-up"></i>
+    </a>
+    <!-- ScrollUp End Here -->
+    <!-- Preloader Start Here -->
+    <!-- <div id="preloader"></div> -->
+    <!-- Preloader End Here -->
+    <div id="wrapper" class="wrapper">
+
+        <!--=====================================-->
+        <!--=            Header Start           =-->
+        <!--=====================================-->
+        
+        <header class="header">
+            <div id="rt-sticky-placeholder"></div>
+            <div id="header-menu" class="header-menu menu-layout2">
+                <div class="container">
+                    <div class="row d-flex align-items-center">
+                        <div class="col-lg-2">
+                            <div class="logo-area">
+                                <a href="https://becoblue.com/home" class="temp-logo">
+                                    <!-- <img src="https://becoblue.com/assets/images/new_beco.jpg" alt="logo" class="img-fluid"> -->
+                                    <img src="https://becoblue.com/uploads/web_setting/header/becoblue.png" alt="logo">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-7 d-flex justify-content-end">
+                            <nav id="dropdown" class="template-main-menu">
+                                <ul>
+                                                                    <li><a href="https://becoblue.com/home">Home</a></li>
+                                    <li><a href="https://becoblue.com/about">About Us</a></li>
+                                    <li><a href="https://becoblue.com/vision-mission">Vision & Mission</a></li>
+                                    <li><a href="https://becoblue.com/contact">Contact</a></li>
+                                    <li class="nav-item"><a href="https://becoblue.com/register?ref=1507381545">Join Now</a></li>
+                                    <li class="nav-item"><a href="https://becoblue.com/login">Login</a></li> 
+                                                                    </ul>
+                            </nav>
+                        </div>
+                        <div class="col-lg-3 d-flex justify-content-end">
+                            <div class="header-action-layout1">
+                                <ul>
+                                   
+                                    <li class="header-btn">                                      
+                                                                                    <a href="https://becoblue.com/register?ref=1507381545" class="my-item-btn">
+                                            <i class="fas fa-user"></i>&nbsp; Join Now</a>
+                                        <a href="https://becoblue.com/login" class="my-item-btn"><i class="fas fa-sign-in-alt" aria-hidden="true"></i>&nbsp; Login</a>
+                                                                            </li>
+                                    <!-- <li class="header-btn">
+                                        <a href="#" class="my-item-btn"><i class="fas fa-user-friends"></i>&nbsp; Join Now</a>
+                                        <a href="#" class="my-item-btn"><i class="fas fa-sign-in-alt" aria-hidden="true"></i>&nbsp; Login</a>
+                                    </li> -->
+                                  
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+     
+        <!--=====================================-->
+        <!--=            Banner Start           =-->
+        <!--=====================================-->
+        <!-- <section class="inner-page-banner" data-bg-image="media/banner/banner1.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumbs-area">
+                    <h1>Page not Found</h1>
+                    <ul>
+                        <li>
+                            <a href="https://becoblue.com/home">Home</a>
+                        </li>
+                        <li>404 not Found</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> -->
+<!--=====================================-->
+<!--=        Faq Page Start      		=-->
+<!--=====================================-->
+<section class="section-padding-equal-70 bg-accent">
+    <div class="container">
+        <div class="error-page-box-layout1">
+            <div class="item-img">
+                <img src="https://becoblue.com/assets/media/figure/404.png" alt="404">
+            </div>
+            <h2 class="item-title">We can't find the page you're looking for</h2>
+            <a href="#" class="error-btn"  onclick="history.back()">Go To Home Page</a>
+        </div>
+    </div>
+</section>
+
+                <!--=====================================-->
+        <!--=       Footer Start           	 	=-->
+        <!--=====================================-->
+        <footer>
+            <div class="footer-top-wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-6">
+                            <div class="footer-box-layout1">
+                                <div class="footer-logo">
+                                    <!-- <img src="https://becoblue.com/assets/images/new_beco.png" alt="logo"> -->
+                                    <img src="https://becoblue.com/uploads/web_setting/footer/dde947c038a4059510bf1256ac09b0aa.png" alt="logo">
+                                </div>
+                                <!-- <p>Classima a Largest Classified Listing Marketplace
+                                    offers perfect WordPress Ads classified Themes to build
+                                    your own classified websites.</p> -->
+                                    <p>Have any query ? +91 8260326858 or info@becoblue.com</p>
+                                    
+                                <ul class="footer-social">
+                                    <li><a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+                                    <li><a href="#" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                                    <li><a href="#" target="_blank"><i class="fab fa-google-plus-g"></i></a></li>
+                                    <li><a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a></li>
+                                    <li><a href="#" target="_blank"><i class="fab fa-pinterest"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- <div class="col-lg-3 col-sm-6">
+                            <div class="footer-box-layout1">
+                                <div class="footer-title">
+                                    <h3>How to Sell Fast</h3>
+                                </div>
+                                <div class="footer-menu-box">
+                                    <ul>
+                                        <li><a href="#">Selling Tips</a></li>
+                                        <li><a href="#">Buy and Sell Quickly</a></li>
+                                        <li><a href="#">Membership</a></li>
+                                        <li><a href="#">Banner Advertising</a></li>
+                                        <li><a href="#">Promote Your Ad</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div> -->
+                        <div class="col-lg-4 col-sm-6">
+                            <div class="footer-box-layout1">
+                                <div class="footer-title">
+                                    <h3>Information</h3>
+                                </div>
+                                <div class="footer-menu-box">
+                                    <ul>
+                                        <!-- <li><a href="https://becoblue.com/privacy_policy">Company & Contact Info</a></li> -->
+                                         <!-- <li><a href="https://becoblue.com/home">Terms of Service</a></li> -->
+                                         <li><a href="https://becoblue.com/privacy-policy">Privacy Policy</a></li>
+                                        <li><a href="https://becoblue.com/terms-conditions">Terms & Conditions</a></li>
+                                        <li><a href="https://becoblue.com/returns-policy">Cancellation & Refund Policy</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <div class="footer-box-layout1">
+                                <div class="footer-title">
+                                    <h3>Help & Support</h3>
+                                </div>
+                                <div class="footer-menu-box">
+                                    <ul>
+                                        <!-- <li><a href="#">Live Chat</a></li>
+                                        <li><a href="#">FAQ</a></li>
+                                        <li><a href="#">How to Stay Safe</a></li> -->
+                                        <li><a href="https://becoblue.com/about">About Us</a></li>
+                                        <li><a href="https://becoblue.com/contact">Contact Us</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom-wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="copyright-text">
+                                © Copyright Becoblue Pvt.Ltd 2019-2022</a>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="payment-option">
+                                <a href="#">
+                                    <img src="https://becoblue.com/assets/media/figure/payment.png" alt="payment">
+                                </a>
+                                <!-- <a href="https://becoblue.com/privacy-policy">Privacy Policy</a>
+                                <a href="https://becoblue.com/terms-conditions">Terms & Conditions</a>
+                                <a href="https://becoblue.com/returns-policy">Cancellation & Refund Policy</a>   -->
+
+                           </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!--=====================================-->
+        <!--=       Modal Start           	 	=-->
+        <!--=====================================-->
+
+       
+        <div class="modal fade modal-location" id="modal-location" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <button type="button" class="close modal-close" data-dismiss="modal" aria-label="Close">
+                        <span class="fas fa-times" aria-hidden="true"></span>
+                    </button>
+                    <div class="location-list">
+                        <h4 class="item-title">Location</h4>
+                        <!-- <select class="form-control" name="" id="">
+                            <option value="">Select Location</option>
+                            <option value="California">California</option>
+                            <option value="Kansas">Kansas</option>
+                            <option value="Louisiana">Louisiana</option>
+                            <option value="New Jersey">New Jersey</option>
+                            <option value="New York">New York</option>
+                        </select> -->
+                        <ul>
+                            <li onclick=""><a href="#">California</a></li>
+                            <li><a href="#">Kansas</a></li>
+                            <li><a href="#">Louisiana</a></li>
+                            <li><a href="#">New Jersey</a></li>
+                            <li><a href="#">New York</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Matrimonial Filter -->
+        <div class="modal fade modal-location" id="modal-category" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <button type="button" class="close modal-close" data-dismiss="modal" aria-label="Close">
+                        <span class="fas fa-times matrimonry-fas" aria-hidden="true"></span>
+                    </button>
+                    <form action="https://becoblue.com/matching_profile" method="POST"> 
+                    <div class="location-list">
+                        <h4 class="item-title">Filter</h4>
+                                                <div class="col-sm-12 p-2">   
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <select class="form-control" name="hf">
+                                        <option value="">Height From</option> 
+                                                                      
+                                        <option value="136"   >ANY HEIGHT</option>
+                                                                      
+                                        <option value="137"   >4' 8''</option>
+                                                                      
+                                        <option value="138"   >4' 9''</option>
+                                                                      
+                                        <option value="139"   >4' 10''</option>
+                                                                      
+                                        <option value="140"   >4' 11''</option>
+                                                                      
+                                        <option value="141"   >5'</option>
+                                                                      
+                                        <option value="142"   >5' 1''</option>
+                                                                      
+                                        <option value="143"   >5' 2''</option>
+                                                                      
+                                        <option value="144"   >5' 3''</option>
+                                                                      
+                                        <option value="145"   >5' 4''</option>
+                                                                      
+                                        <option value="146"   >5' 5''</option>
+                                                                      
+                                        <option value="147"   >5' 6''</option>
+                                                                      
+                                        <option value="148"   >5' 7''</option>
+                                                                      
+                                        <option value="149"   >5' 8''</option>
+                                                                      
+                                        <option value="150"   >5' 9''</option>
+                                                                      
+                                        <option value="151"   >5' 10''</option>
+                                                                      
+                                        <option value="152"   >5' 11''</option>
+                                                                      
+                                        <option value="153"   >6'</option>
+                                                                      
+                                        <option value="154"   >6' 1''</option>
+                                                                      
+                                        <option value="155"   >6' 2''</option>
+                                                                      
+                                        <option value="156"   >6' 3''</option>
+                                                                      
+                                        <option value="157"   >6' 4''</option>
+                                                                      
+                                        <option value="158"   >6' 5''</option>
+                                                                      
+                                        <option value="159"   >6' 6''</option>
+                                                                      
+                                        <option value="160"   >6' 7''</option>
+                                                                      
+                                        <option value="161"   >6' 8''</option>
+                                                                      
+                                        <option value="162"   >6' 9''</option>
+                                                                      
+                                        <option value="163"   >6' 10''</option>
+                                                                      
+                                        <option value="164"   >6' 11''</option>
+                                                                      
+                                        <option value="165"   >7'</option>
+                                                                            </select> 
+                                </div>
+                                <div class="text-right col-md-6">
+                                    <select class="form-control" name="ht">
+                                        <option value="">Height To</option> 
+                                                                      
+                                        <option value="136"  >ANY HEIGHT</option>
+                                                                      
+                                        <option value="137"  >4' 8''</option>
+                                                                      
+                                        <option value="138"  >4' 9''</option>
+                                                                      
+                                        <option value="139"  >4' 10''</option>
+                                                                      
+                                        <option value="140"  >4' 11''</option>
+                                                                      
+                                        <option value="141"  >5'</option>
+                                                                      
+                                        <option value="142"  >5' 1''</option>
+                                                                      
+                                        <option value="143"  >5' 2''</option>
+                                                                      
+                                        <option value="144"  >5' 3''</option>
+                                                                      
+                                        <option value="145"  >5' 4''</option>
+                                                                      
+                                        <option value="146"  >5' 5''</option>
+                                                                      
+                                        <option value="147"  >5' 6''</option>
+                                                                      
+                                        <option value="148"  >5' 7''</option>
+                                                                      
+                                        <option value="149"  >5' 8''</option>
+                                                                      
+                                        <option value="150"  >5' 9''</option>
+                                                                      
+                                        <option value="151"  >5' 10''</option>
+                                                                      
+                                        <option value="152"  >5' 11''</option>
+                                                                      
+                                        <option value="153"  >6'</option>
+                                                                      
+                                        <option value="154"  >6' 1''</option>
+                                                                      
+                                        <option value="155"  >6' 2''</option>
+                                                                      
+                                        <option value="156"  >6' 3''</option>
+                                                                      
+                                        <option value="157"  >6' 4''</option>
+                                                                      
+                                        <option value="158"  >6' 5''</option>
+                                                                      
+                                        <option value="159"  >6' 6''</option>
+                                                                      
+                                        <option value="160"  >6' 7''</option>
+                                                                      
+                                        <option value="161"  >6' 8''</option>
+                                                                      
+                                        <option value="162"  >6' 9''</option>
+                                                                      
+                                        <option value="163"  >6' 10''</option>
+                                                                      
+                                        <option value="164"  >6' 11''</option>
+                                                                      
+                                        <option value="165"  >7'</option>
+                                                                            </select> 
+                                </div> 
+                            </div> 
+                        </div>  
+                        <div class="col-sm-12 p-2">   
+                            <div class="form-row">
+                                <div class="  col-md-6">
+                                    <select class="form-control" name="af">
+                                        <option value="">Age From</option> 
+                                                                                <option value="21"  >21</option> 
+                                                                                <option value="22"  >22</option> 
+                                                                                <option value="23"  >23</option> 
+                                                                                <option value="24"  >24</option> 
+                                                                                <option value="25"  >25</option> 
+                                                                                <option value="26"  >26</option> 
+                                                                                <option value="27"  >27</option> 
+                                                                                <option value="28"  >28</option> 
+                                                                                <option value="29"  >29</option> 
+                                                                                <option value="30"  >30</option> 
+                                                                                <option value="31"  >31</option> 
+                                                                                <option value="32"  >32</option> 
+                                                                                <option value="33"  >33</option> 
+                                                                                <option value="34"  >34</option> 
+                                                                                <option value="35"  >35</option> 
+                                                                                <option value="36"  >36</option> 
+                                                                                <option value="37"  >37</option> 
+                                                                                <option value="38"  >38</option> 
+                                                                                <option value="39"  >39</option> 
+                                                                                <option value="40"  >40</option> 
+                                                                                <option value="41"  >41</option> 
+                                                                                <option value="42"  >42</option> 
+                                                                                <option value="43"  >43</option> 
+                                                                                <option value="44"  >44</option> 
+                                                                                <option value="45"  >45</option> 
+                                                                                <option value="46"  >46</option> 
+                                                                                <option value="47"  >47</option> 
+                                                                                <option value="48"  >48</option> 
+                                                                                <option value="49"  >49</option> 
+                                                                                <option value="50"  >50</option> 
+                                                                                <option value="51"  >51</option> 
+                                                                                <option value="52"  >52</option> 
+                                                                                <option value="53"  >53</option> 
+                                                                                <option value="54"  >54</option> 
+                                                                                <option value="55"  >55</option> 
+                                                                            </select> 
+                                </div>
+                                <div class="  text-right col-md-6">
+                                    <select class="form-control" name="at">
+                                        <option value="">Age To</option> 
+                                                                                <option value="21"  >21</option> 
+                                                                                <option value="22"  >22</option> 
+                                                                                <option value="23"  >23</option> 
+                                                                                <option value="24"  >24</option> 
+                                                                                <option value="25"  >25</option> 
+                                                                                <option value="26"  >26</option> 
+                                                                                <option value="27"  >27</option> 
+                                                                                <option value="28"  >28</option> 
+                                                                                <option value="29"  >29</option> 
+                                                                                <option value="30"  >30</option> 
+                                                                                <option value="31"  >31</option> 
+                                                                                <option value="32"  >32</option> 
+                                                                                <option value="33"  >33</option> 
+                                                                                <option value="34"  >34</option> 
+                                                                                <option value="35"  >35</option> 
+                                                                                <option value="36"  >36</option> 
+                                                                                <option value="37"  >37</option> 
+                                                                                <option value="38"  >38</option> 
+                                                                                <option value="39"  >39</option> 
+                                                                                <option value="40"  >40</option> 
+                                                                                <option value="41"  >41</option> 
+                                                                                <option value="42"  >42</option> 
+                                                                                <option value="43"  >43</option> 
+                                                                                <option value="44"  >44</option> 
+                                                                                <option value="45"  >45</option> 
+                                                                                <option value="46"  >46</option> 
+                                                                                <option value="47"  >47</option> 
+                                                                                <option value="48"  >48</option> 
+                                                                                <option value="49"  >49</option> 
+                                                                                <option value="50"  >50</option> 
+                                                                                <option value="51"  >51</option> 
+                                                                                <option value="52"  >52</option> 
+                                                                                <option value="53"  >53</option> 
+                                                                                <option value="54"  >54</option> 
+                                                                                <option value="55"  >55</option> 
+                                                                            </select> 
+                                </div> 
+                            </div> 
+                        </div>
+                        <div class="col-sm-12 p-2">
+                            <select class="form-control" name="qul" >
+                                <option value="">Select Qualification</option> 
+                                                              
+                                <option value="10" >+2</option>
+                                                              
+                                <option value="13" >10th</option>
+                                                              
+                                <option value="16" >Any Qualification</option>
+                                                              
+                                <option value="78" >B.A</option>
+                                                              
+                                <option value="17" >B.C.A</option>
+                                                              
+                                <option value="77" >B.SC</option>
+                                                              
+                                <option value="18" >B.TECH</option>
+                                                              
+                                <option value="12" >C.A</option>
+                                                              
+                                <option value="11" >Diploma</option>
+                                                              
+                                <option value="15" >Doctor</option>
+                                                              
+                                <option value="14" >Graduation</option>
+                                                              
+                                <option value="75" >M.C.A</option>
+                                                              
+                                <option value="76" >Others</option>
+                                                            </select> 
+                        </div> 
+                        <div class="col-sm-12 p-2">
+                            <select class="form-control" name="ocu">
+                                <option value="">Select Occupation</option> 
+                                                              
+                                <option value="68" >Any Occupation</option>
+                                                              
+                                <option value="69" >Business</option>
+                                                              
+                                <option value="70" >Job</option>
+                                                            </select> 
+                        </div>   
+                        <div class="col-sm-12 p-2">
+                            <select class="form-control" name="inc">
+                                <option value="">Select Income</option> 
+                                                              
+                                <option value="31"  >0-1 LAKH</option>
+                                                              
+                                <option value="46"  >07 -80 Lakhs</option>
+                                                              
+                                <option value="26"  >1 -2 Lakhs</option>
+                                                              
+                                <option value="22"  >1- 2 Core</option>
+                                                              
+                                <option value="21"  >10 -12 Lakhs</option>
+                                                              
+                                <option value="20"  >12 -14 Lakhs</option>
+                                                              
+                                <option value="23"  >14 -16 Lakhs</option>
+                                                              
+                                <option value="24"  >16 -18 Lakhs</option>
+                                                              
+                                <option value="25"  >18 -20 Lakhs</option>
+                                                              
+                                <option value="19"  >2 -3 Lakhs</option>
+                                                              
+                                <option value="34"  >25-30 Lakhs</option>
+                                                              
+                                <option value="35"  >3 -4 Lakhs</option>
+                                                              
+                                <option value="36"  >30 -35 Lakhs</option>
+                                                              
+                                <option value="37"  >35 -40 Lakhs</option>
+                                                              
+                                <option value="38"  >4 -5 Lakhs</option>
+                                                              
+                                <option value="39"  >40 -45 Lakhs</option>
+                                                              
+                                <option value="40"  >45 -50 Lakhs</option>
+                                                              
+                                <option value="41"  >5 -6 Lakhs</option>
+                                                              
+                                <option value="42"  >50 -60 Lakhs</option>
+                                                              
+                                <option value="43"  >6-7 Lakhs</option>
+                                                              
+                                <option value="44"  >60 -70 Lakhs</option>
+                                                              
+                                <option value="45"  >7 -8 Lakhs</option>
+                                                              
+                                <option value="47"  >70 -80 Lakhs</option>
+                                                              
+                                <option value="48"  >8 -9 Lakhs</option>
+                                                              
+                                <option value="49"  >80 -90 Lakhs</option>
+                                                              
+                                <option value="50"  >9 -10 Lakhs</option>
+                                                              
+                                <option value="51"  >90 -1 Core</option>
+                                                              
+                                <option value="52"  >Any Income</option>
+                                                            </select> 
+                        </div>   
+                        <div class="col-sm-12 p-2">
+                            <input  class="form-control  form-control-sm" type="submit" name="button" value="Search" style="background-color: rgb(217 225 211);">   
+                        </div> 
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+   
+    <!-- Popper Js -->
+    <script src="https://becoblue.com/assets/dependencies/popper.js/js/popper.min.js"></script>
+    <!-- Bootstrap Js -->
+    <script src="https://becoblue.com/assets/dependencies/bootstrap/js/bootstrap.min.js"></script>
+    <!-- Waypoints Js -->
+    <script src="https://becoblue.com/assets/dependencies/waypoints/js/jquery.waypoints.min.js"></script>
+    <!-- Counterup Js -->
+    <script src="https://becoblue.com/assets/dependencies/jquery.counterup/js/jquery.counterup.min.js"></script>
+    <!-- Owl Carousel Js -->
+    <script src="https://becoblue.com/assets/dependencies/owl.carousel/js/owl.carousel.min.js"></script>
+    <!-- ImagesLoaded Js -->
+    <script src="https://becoblue.com/assets/dependencies/imagesloaded/js/imagesloaded.pkgd.min.js"></script>
+    <!-- Isotope Js -->
+   <script src="https://becoblue.com/assets/dependencies/isotope-layout/js/isotope.pkgd.min.js"></script>
+    <!-- Animated Headline Js -->
+    <script src="https://becoblue.com/assets/dependencies/jquery-animated-headlines/js/jquery.animatedheadline.min.js"></script>
+    <!-- Magnific Popup Js -->
+    <script src="https://becoblue.com/assets/dependencies/magnific-popup/js/jquery.magnific-popup.min.js"></script>
+    <!-- ElevateZoom Js -->
+    <script src="https://becoblue.com/assets/dependencies/elevatezoom/js/jquery.elevateZoom-2.2.3.min.js"></script>
+    <!-- Bootstrap Validate Js -->
+     <script src="https://becoblue.com/assets/dependencies/bootstrap-validator/js/validator.min.js"></script>
+    <!-- Meanmenu Js -->
+    <script src="https://becoblue.com/assets/dependencies/meanmenu/js/jquery.meanmenu.min.js"></script>
+   
+   
+    <script src="https://becoblue.com/assets/js/app.js"></script>
+    <script>
+        $('.location').select2();
+    </script>
+</body>
+<script>'undefined'=== typeof _trfq || (window._trfq = []);'undefined'=== typeof _trfd && (window._trfd=[]),_trfd.push({'tccl.baseHost':'secureserver.net'}),_trfd.push({'ap':'cpsh-oh'},{'server':'bom1plzcpnl493854'},{'id':'8796143'}) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script><script src='https://img1.wsimg.com/traffic-assets/js/tccl.min.js'></script></html>
