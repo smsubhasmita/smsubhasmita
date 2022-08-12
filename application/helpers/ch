@@ -1,0 +1,386 @@
+ <?php
+if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+/********************* Menu Functions  ************************ */
+Function ChkMainMenuPer_Fn($User_Id , $MainMenu_Id) {
+    $ci=& get_instance();
+    $ci->load->database();
+    $sql="SELECT COUNT(*) AS TOTREC FROM ERPUSER.USR_JOB WHERE
+    USJ_USCD=$User_Id AND USJ_SHOW=1 AND USJ_MID IN(SELECT MID FROM COMMON.MENU WHERE MNMID=$MainMenu_Id)";
+    $sqlqry=$ci->db->query($sql);
+    $sqlrow=$sqlqry->row();
+    if($sqlrow->TOTREC >0){
+        $ChkMainMenuPer_Fn = 1;
+    }
+    else{
+        $ChkMainMenuPer_Fn = 0;
+    }
+    return $ChkMainMenuPer_Fn;
+}
+function ChkMenuPer_Fn($User_Id, $Menu_Id){
+    $ci=& get_instance();
+    $ci->load->database();
+    $sql="SELECT COUNT(*) AS TOTREC FROM ERPUSER.USR_JOB WHERE
+    USJ_USCD=$User_Id AND USJ_MID=$Menu_Id AND USJ_SHOW=1";
+    $sqlqry=$ci->db->query($sql);
+    $sqlrow=$sqlqry->row();
+    if($sqlrow->TOTREC >0){
+        $ChkMenuPer_Fn = 1;
+    }
+    else{
+        $ChkMenuPer_Fn = 0;
+    }
+    return $ChkMenuPer_Fn;
+}
+//DECRIPT Function FOR Module name like storematerial
+function DecryptX($CodedString1){ 
+    $String1 ="";
+    $hex2="0123456789abcdef";
+    $HB=substr($CodedString1,0, 1);
+    $LB=substr($CodedString1,1, 1);
+    $offset=stripos($hex2, $HB) * 16 + stripos($hex2, $LB);
+    $HB=substr($CodedString1,2, 1);
+    $LB=substr($CodedString1,3, 1);
+    $length=stripos($hex2, $HB) * 16 + stripos($hex2, $LB);
+    $HB= substr($CodedString1,4, 1);
+    $LB= substr($CodedString1,5, 1);
+    $HB2 =substr($CodedString1,6, 1);
+    $LB2=substr($CodedString1,7, 1);
+    $checksum=stripos($hex2, $HB) * 4096 +stripos($hex2, $LB) * 256 +stripos($hex2, $HB2) * 16 + stripos($hex2, $LB2);
+    $CodedString1=substr($CodedString1,8).strtolower($CodedString1);
+
+   for ($x = 0; $x <= ($length-1); $x++) {
+        $HB = substr($CodedString1,$x * 2, 1);
+        $LB = substr($CodedString1,$x * 2 + 1, 1);
+        $String1 .= chr(stripos($hex2, $HB) * 16 + stripos($hex2, $LB) - $offset);
+    }
+    return $String1;
+}
+//menu link creation
+function menu_link_creation($module_short_name,$moduleName,$menu_name){
+    $folder_name=substr($module_short_name,0,3); 
+    $controller_name=str_replace(' ','',$moduleName);
+    //$function_name=str_replace(' ','_', $menu_name);
+    //$function_name=str_replace('-','_', strtolower($function_name));
+    return  $folder_name.'/'.$controller_name."/".strtolower($menu_name);
+}
+
+
+function menu_active($ERU_USCD, $SUBMENUS){
+    foreach($SUBMENUS as $SUBMENU){
+        $MID=$SUBMENU->MID;
+        if(ChkMenuPer_Fn($ERU_USCD, $MID)==1){
+           $function_name=str_replace(' ','_', $SUBMENU->MNAME);
+          return $function_name=str_replace('-','_', strtolower($function_name));
+        }
+    }
+}
+/********************* Database Functions  ************************ */
+
+//GET Primary key with auto increement
+function get_pk_id($TB_NAME,$TB_COLUMN_NAME){
+    $ci=& get_instance();
+    $ci->load->database();
+    $sql="SELECT nvl(max($TB_COLUMN_NAME),0) from $TB_NAME";
+    $sqlqry=$ci->db->query($sql);
+    $sqlrows= $sqlqry->row();
+    foreach($sqlrows as $r){
+        $sqlrow= $r;
+    }
+    if ($sqlrow <= 0) {
+        $GetId_Fn = 1;
+    }
+    else{
+        $GetId_Fn = $sqlrow + 1;
+    }
+    return $GetId_Fn;
+}
+
+
+//GET Primary key with auto increement
+function get_pk_id2($TB_NAME,$TB_COLUMN_NAME,$params){
+    $ci=& get_instance();
+    $ci->load->database();
+    $sql="SELECT nvl(max($TB_COLUMN_NAME),0) from $TB_NAME WHERE $params";
+    $sqlqry=$ci->db->query($sql);
+    $sqlrows= $sqlqry->row();
+    foreach($sqlrows as $r){
+        $sqlrow= $r;
+    }
+    if ($sqlrow <= 0) {
+        $GetId_Fn = 1;
+    }
+    else{
+        $GetId_Fn = $sqlrow + 1;
+    }
+    return $GetId_Fn;
+}
+
+//GET BRANCH ID
+function get_branch(){
+    $ci=& get_instance();
+    $ci->load->database();
+    $sql="SELECT EMM_BRCD FROM EMP_MST01 WHERE EMM_EMCD=252";
+    $res =$ci->db->query($sql);
+    $sqlrow=$res->row();
+    $result_nm=$sqlrow->EMM_BRCD;
+    return $result_nm;
+}
+function get_fynancial_year(){
+    $ci=& get_instance();
+    $ci->load->database();
+    $sql="SELECT FIM_FNCD,FIM_FYCD FROM COMMON.FIN_MST WHERE FIM_FNCD=(SELECT MAX(FIM_FNCD) FROM COMMON.FIN_MST)";
+    $res =$ci->db->query($sql);
+    $sqlrow=$res->row();
+    $result_nm=$sqlrow->FIM_FNCD;
+    return $result_nm;
+}
+// Retrive Column Name
+function get_column_value($tbl_name,$tbl_column_name,$params){
+    $ci=& get_instance();
+    $ci->load->database();
+    $sql="SELECT $tbl_column_name FROM $tbl_name WHERE $params";
+    $res =$ci->db->query($sql);
+    $sqlrow=$res->row();
+    $result_nm=$sqlrow->$TB_COLUMN_NAME;
+    return $result_nm;
+}
+/** Get table data */
+function get_table_data($table_name, $select_column_name,$param="") {
+    $CI =&  get_instance();
+    $CI->load->database();
+    if(!empty($param))
+        $sql="SELECT $select_column_name FROM $table_name WHERE $param";
+    else
+        $sql="SELECT $select_column_name FROM $table_name ";
+    $query=$CI->db->query($sql);
+    return $query;
+}
+
+/** Data Insert */
+function data_insert($table_name, $data) {
+    $CI =&  get_instance();
+    $CI->load->database();
+    
+    $CI->db->insert($table_name, $data);
+    return true;
+    /*
+    if($CI->db->insert($table_name, $data)){
+        return true;
+    }else{
+        $error  =$CI->db->error();
+		$error__prefix=error_prefix();
+		$error_msg =$error__prefix."[ ERROR: " . $error['message']."] \n";
+        file_write($error_msg);
+        return false ;
+    }
+   */
+}
+
+/** Data Update */
+function data_update($table_name,$column_name, $data) {
+    $CI =&  get_instance();
+    $CI->load->database();
+    $CI->db->where($column_name,$data[$column_name]);
+
+    $CI->db->update($table_name, $data);
+    return true;
+   
+    /*
+    if($CI->db->update($table_name, $data)){
+        return true;
+    }else{
+        $error  =$CI->db->error();
+		$error__prefix=error_prefix();
+		$error_msg =$error__prefix."[ ERROR: " . $error['message']."] \n";
+        file_write($error_msg);
+        return false ;
+    }
+   */
+}
+
+/** Data Delete Permanent */
+
+function data_delete_p($table_name,$column_name, $id) {
+    $CI =&  get_instance();
+    $CI->load->database();
+    $CI->db->where($column_name,$id);
+
+    $CI->db->delete($table_name); 
+    return true;
+    /*
+    if($CI->db->delete($table_name)){
+        return true;
+    }else{
+        $error  =$CI->db->error();
+		$error__prefix=error_prefix();
+		$error_msg =$error__prefix."[ ERROR: " . $error['message']."] \n";
+        file_write($error_msg);
+        return false ;
+    }
+    */
+}
+
+function data_delete_p_multiple_condition($table_name,$column_name, $id,$column_name2, $id2) {
+    $CI =&  get_instance();
+    $CI->load->database();
+    $CI->db->where($column_name,$id);
+    $CI->db->where($column_name2,$id2);
+    $CI->db->delete($table_name); 
+    return true;
+
+    /*
+    if($CI->db->delete($table_name)){
+        return true;
+    }else{
+        $error  =$CI->db->error();
+		$error__prefix=error_prefix();
+		$error_msg =$error__prefix."[ ERROR: " . $error['message']."] \n";
+        file_write($error_msg);
+        return false ;
+    }
+    */
+}
+
+/** Check Uniq column value */
+function check_uniq_value($table_name, $column_name, $value,$cencel_column_name=NULL) {
+    $CI =&  get_instance();
+    $CI->load->database();
+    $CI->db->select('COUNT(*) as TOT');
+    $CI->db->where($column_name, $value);
+    if(!empty($cencel_column_name)){
+        $CI->db->where($cencel_column_name, 0);
+    }
+    $query=$CI->db->get($table_name);
+    $result= $query->row()->TOT;
+    return intval($result);
+    //echo $CI->db->last_query(); //SELECT count(*) as TOT FROM `payment_mst` WHERE `bocw_id` = 'ODANG001000134'
+}
+function check_uniq_column_value($table_name, $column_name, $value,$con_column_name,$id,$cencel_column_name=NULL) {
+    $CI =&  get_instance();
+    $CI->load->database();
+
+    $subquery="";
+    if(!empty($cencel_column_name)){
+       $subquery .="AND $cencel_column_name = 0"; 
+    }
+    $SQL="SELECT COUNT(*) as TOT FROM $table_name WHERE $column_name = '$value' AND $con_column_name != $id  $subquery ";
+    $query=$CI->db->query($SQL);
+    $result=$query->row()->TOT;
+    return intval($result);
+    //$CI->db->last_query(); //SELECT COUNT(*) as TOT FROM PTY_MST01 WHERE PTM_PTNM = 'Programminghubs1' AND PTM_PTCD != 1397
+}
+function check_uniq_column($sql) {
+    $CI =&  get_instance();
+    $CI->load->database();
+    $query=$CI->db->query($sql);
+    $result=$query->row()->TOT;
+    return intval($result);
+    //$CI->db->last_query(); //SELECT COUNT(*) as TOT FROM PTY_MST01 WHERE PTM_PTNM = 'Programminghubs1' AND PTM_PTCD != 1397
+}
+
+function check_delete($table_name, $column_name, $value,$cencel_column_name){
+    $CI =&  get_instance();
+    $CI->load->database();
+    $SQL="SELECT COUNT(*) as TOT FROM $table_name WHERE $column_name = '$value' AND $cencel_column_name=0";
+    $query=$CI->db->query($SQL);
+    $result=$query->row()->TOT;
+    return intval($result);
+}
+
+function check_delete2($table_name,$query){
+    $CI =&  get_instance();
+    $CI->load->database();
+    $SQL="SELECT COUNT(*) as TOT FROM $table_name WHERE $query";
+    $query=$CI->db->query($SQL);
+    $result=$query->row()->TOT;
+    return intval($result);
+}
+
+function is_invoice_generate($CDH_DVCD,$CDH_PTCD){
+    $CI =&  get_instance();
+    $CI->load->database();
+    //NVL((SELECT PTM_PTNM FROM PTY_MST01 WHERE PTM_PTCD=CIH_PTCD),'') CLIENTNAME,
+    $SQL="SELECT CIH_POST FROM CIV_HDR01 WHERE CIH_DVCD=$CDH_DVCD AND CIH_PTCD=$CDH_PTCD";
+    $query=$CI->db->query($SQL);
+    $result=$query->row();
+    return isset($result)?$result->CIH_POST:3;
+}
+/* Get total record */
+function total_record($table,$condition=""){
+    $CI =&  get_instance();
+    $CI->load->database();
+    $CI->db->select('*');
+    if($condition !=""){
+        $CI->db->where($condition);
+    }
+    $CI->db->from($table);
+    $q =$CI->db->get();
+   return $r =$q->num_rows();
+}
+
+
+
+function error_prefix() {
+    $date_time=date('Y-m-d H:i:s a');
+    $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+    return get_ip()."[".$date_time."] '".$actual_link."' ";
+
+}
+
+/** ERROR file Write  **/
+function file_write($msg){
+    $uploadPath='error/';
+    if (!file_exists($uploadPath)){
+        @mkdir($uploadPath, 0777,true);
+    }
+    $fp = fopen($uploadPath.'error_log.txt', 'a');//opens file in append mode  
+    fwrite($fp, $msg);  
+    fclose($fp);  
+}
+
+
+
+
+
+
+
+
+/********************* My Functions ************************ */
+function mail_send($data=array()){
+    $ci=&get_instance();
+    $ci->load->library("PhpMailerLib");
+    $mail = $ci->phpmailerlib->load();
+    // SMTP configuration
+    $mail->isSMTP();
+    $mail->Host = 'smtp.gmail.com';
+    //$mail->SMTPDebug  =true;
+    $mail->SMTPAuth = true;
+    $mail->Username = '';//enter your gmail address
+    $mail->Password = ''; //password of your gmail account
+    $mail->SMTPSecure = 'tls';
+    $mail->Port = 587;
+
+    $mail->setFrom('', 'programminghubs');
+    $mail->addreplyTo('', 'programminghubs');
+
+    //$mail->addCC('cc@example.com');
+    //$mail->addBCC('bcc@example.com');
+
+    // Add a recipient
+    $mail->addAddress($data['to'],  $data['to_name']); //email address of recipient
+    //If sending HTML email set to true else set to false
+    $mail->isHTML(true);
+    // Email subject
+    $mail->Subject =  $data['subject'];
+    //$mail->AddAttachment($data['attachment']);
+    $mail->Body =$data['body'];
+    
+    if($mail->send())
+       //return True;
+       echo "Success";
+    else
+        //return False;
+        echo 'Mail not send'.'<br> Error:'. $mail->ErrorInfo;
+
+}
